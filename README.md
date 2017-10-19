@@ -1,8 +1,8 @@
-#Dependency Injection Container spike
+# Dependency Injection Container spike
 
 This project is a showcase of how Corda could benefit from a Dependency Injection container.
 
-##What's shown
+## What's shown
 
 A Dependency Injection container (Spring Boot) is used to:
 
@@ -14,7 +14,7 @@ A Dependency Injection container (Spring Boot) is used to:
 - Find and inject types within a CordApp module (thus enabling DI in initiated flows).
 - Read properties in a cascading way within a CordApp module (thus enabling CordApps to specify properties in a convenient way).
 
-##Notes and remarks
+## Notes and remarks
 
 With regards to what stated above, some remarks:
 
@@ -23,13 +23,13 @@ With regards to what stated above, some remarks:
 - If we decide to use `Spring Boot` as a Dependency Injection Container we enable CordApps to leverage a wider set of feature.
 - The entire project took roughly 3 hours, including documentation. It's written in Kotlin and works with both JDK8 and JDK9.
 
-##How to run it
+## How to run it
 
 Run/Debug `NodeStarter.kt` and watch the console. Then open `Node` and follow the code.
 
-##Project modules structure
+## Project modules structure
 
-###corda-node
+### corda-node
 
 The active part of the Corda platform. It defines the entry point and, when run, it wires and starts the node.
 
@@ -44,7 +44,7 @@ Relevant dependencies:
 - cordapp-2
 - cordapp-3
 
-###corda
+### corda
 
 This module defines types similar to those in Corda, which are available for CordApps. 
 For the sake of saving some time, it also has types which should not be available to CordApps, but in a real scenario it would be trivial 
@@ -54,7 +54,7 @@ Relevant dependencies:
 - javax.inject:javax.inject
 - javax.annotation:jsr250-api
 
-###cora-di-cordapps-resolver
+### corda-di-cordapps-resolver
 
 This module provides a CordApps resolution mechanism based on a Dependency Injection container.
 It is used at runtime by `corda-node`.
@@ -64,7 +64,7 @@ Relevant dependencies:
 - javax.annotation:jsr250-api
 - corda
 
-###cora-noop-flows-registry
+### corda-noop-flows-registry
 
 This module provides a no-op flows registry implementation that simply logs new bindings.
 It is used at runtime by `corda-node`.
@@ -74,14 +74,14 @@ Relevant dependencies:
 - javax.annotation:jsr250-api
 - corda
 
-###cordapp-1
+### cordapp-1
 
 This module defines an initiating flow, `QueryClusterAverageTemperature`, along with a domain model.
 
 Relevant dependencies:
 - corda
 
-###cordapp-2
+### cordapp-2
 
 This module defines a flow initiated by `QueryClusterAverageTemperature` defined in `cordapp-1`, which uses the Dependency Injection 
 Container to inject dependencies inside the flow, and to read properties in a cascading way.
@@ -93,7 +93,7 @@ Relevant dependencies:
 - org.springframework:spring-context
 - cordapp-1
 
-###cordapp-3
+### cordapp-3
 
 This module defines a flow initiated by `QueryClusterAverageTemperature` defined in `cordapp-1`, which uses the Dependency Injection 
 Container to inject dependencies inside the flow.
