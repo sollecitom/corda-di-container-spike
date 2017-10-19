@@ -1,0 +1,19 @@
+group 'net.corda.spikes.di-container-spike'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    compile "org.springframework.boot:spring-boot:$spring_boot_version"
+    compile "org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version"
+    compile "org.springframework.boot:spring-boot-starter-log4j2:$spring_boot_version"
+
+    // TODO whether defined in Gradle or added as JARs to the classpath, dependencies behave the same way
+    compile project(":cordapp-1")
+    compile project(":cordapp-2")
+    compile project(":cordapp-3")
+
+    // TODO whether defined in Gradle or added as JARs to the classpath, dependencies behave the same way
+    runtime project(":corda-di-cordapps-resolver")
+    runtime project(":corda-noop-flows-registry")
+
+    compile project(":corda")
+}

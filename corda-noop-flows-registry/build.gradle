@@ -1,0 +1,6 @@
+group 'net.corda.spikes.di-container-spike'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    compile project(":corda")
+}

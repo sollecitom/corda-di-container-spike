@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+
+    <ThresholdFilter level="info"/>
+
+    <Appenders>
+        <Console name="Console-Appender" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>
+                    %highlight{[%level] %d{HH:mm:ss} %c{1}.%M - %msg%n}{INFO=white,WARN=red,FATAL=bright red blink}
+                </pattern>>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console-Appender"/>
+        </Root>
+        <Logger name="net.corda" level="info" additivity="false">
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
+        <Logger name="org.springframework" level="warn" additivity="false">
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
+    </Loggers>
+
+</Configuration>

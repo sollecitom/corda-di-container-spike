@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="corda-di-cordapps-resolver_main" target="1.8" />
+      <module name="corda-di-cordapps-resolver_test" target="1.8" />
+      <module name="corda-node_main" target="1.8" />
+      <module name="corda-node_test" target="1.8" />
+      <module name="corda-noop-flows-registry_main" target="1.8" />
+      <module name="corda-noop-flows-registry_test" target="1.8" />
+      <module name="corda_main" target="1.8" />
+      <module name="corda_test" target="1.8" />
+      <module name="cordapp-1_main" target="1.8" />
+      <module name="cordapp-1_test" target="1.8" />
+      <module name="cordapp-2_main" target="1.8" />
+      <module name="cordapp-2_test" target="1.8" />
+      <module name="cordapp-3_main" target="1.8" />
+      <module name="cordapp-3_test" target="1.8" />
+      <module name="di-container-spike_main" target="1.8" />
+      <module name="di-container-spike_test" target="1.8" />
+      <module name="di-cordapps-resolver_main" target="1.8" />
+      <module name="di-cordapps-resolver_test" target="1.8" />
+      <module name="parent_main" target="1.8" />
+      <module name="parent_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

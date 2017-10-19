@@ -1,0 +1,10 @@
+rootProject.name = 'parent'
+include 'corda'
+include 'cordapp-1'
+include 'cordapp-2'
+include 'cordapp-3'
+include 'corda-node'
+include 'di-cordapps-resolver'
+include 'corda-di-cordapps-resolver'
+include 'corda-noop-flows-registry'
+
