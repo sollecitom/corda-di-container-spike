@@ -9,18 +9,15 @@ A Dependency Injection container (Spring Boot) is used to:
 - Find and inject types inside the same Corda module.
 - Read properties in a cascading way inside the same Corda module.
 - Find and inject types from a module's Corda dependencies, thus enabling a plugin-based architecture.
-- Read properties in a cascading way from a module's Corda dependencies (not shown in this case but shown for CordApps modules).
 - Find and inject types in a Corda module from non-Corda modules (thus enabling CordApps loading).
 - Find and inject types within a CordApp module (thus enabling DI in initiated flows).
-- Read properties in a cascading way within a CordApp module (thus enabling CordApps to specify properties in a convenient way).
 
 ## Notes and remarks
 
 With regards to what stated above, some remarks:
 
-- Most modules, including some CordApps, only depend on `javax.inject` and `JSR 250`, meaning they're completely Spring-agnostic.
-- Spring provides a superset of the features offered by `javax.inject` and `JSR 250`, meaning modules that want to leverage those (property values injection, etc.) depend on `spring-context` (just annotations) but still are agnostic of `spring-boot`.
-- If we decide to use `Spring Boot` as a Dependency Injection Container, we enable CordApps to leverage a wider set of feature.
+- Most modules, including all CordApps, only depend on `javax.inject` and `JSR 250`, meaning they're completely Spring-agnostic.
+- Any Dependency Injection container compatible with `javax.inject`, `JSR 250` and package scanning will work.
 - The entire project took roughly 3 hours, including documentation. It's written in Kotlin and works with both JDK8 and JDK9.
 
 ## How to run it
@@ -90,7 +87,6 @@ Relevant dependencies:
 - javax.inject:javax.inject
 - javax.annotation:jsr250-api
 - corda
-- org.springframework:spring-context
 - cordapp-1
 
 ### cordapp-3

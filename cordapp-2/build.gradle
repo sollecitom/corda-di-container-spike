@@ -1,8 +1,12 @@
 group 'net.corda.spikes.di-container-spike'
 version '1.0-SNAPSHOT'
 
+buildscript {
+    ext.konfig_version = '1.6.1.0'
+}
+
 dependencies {
-    compile "org.springframework:spring-context:$spring_version"
+    compile "com.natpryce:konfig:$konfig_version"
 
     compile project(":cordapp-1")
 
