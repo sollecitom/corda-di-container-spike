@@ -27,6 +27,9 @@ internal class Node(private val cordAppsContainer: CordAppsContainer, private va
             logger.info("Registering CordApp ${cordApp.name.value} with version ${cordApp.version.value}. Scanning package \"${cordApp.rootPackage.value}\".")
             // TODO one separate DI context for each CordApp, meaning there's no risk to inject something from another CordApp by mistake.
             val context = AnnotationConfigApplicationContext(cordApp.rootPackage.value)
+            val cordAppClassLoader = cordApp::class.java.classLoader
+            context.classLoader = cordAppClassLoader
+
             val initiatedFlows = context.getBeansOfType(Flows.Initiated::class.java)
             initiatedFlows.map { it.value }.forEach { initiated ->
                 initiated.initiatedBy.forEach { initiating ->
