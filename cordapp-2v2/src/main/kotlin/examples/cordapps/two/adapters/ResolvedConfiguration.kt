@@ -8,7 +8,6 @@ private const val PROPERTIES = "/cordapp2.properties"
 
 @Named
 internal class ResolvedConfiguration : Properties(PROPERTIES), ConfigurableTemperatureSensor.Configuration {
-
     companion object {
         private val key = Key("config.sensors.temperature.value", { _, value -> Temperature(value.toDouble()) })
     }

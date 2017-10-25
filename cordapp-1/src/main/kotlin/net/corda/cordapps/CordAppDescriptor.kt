@@ -2,12 +2,12 @@ package net.corda.cordapps
 
 import javax.inject.Named
 
-const val NAME = "CORDAPP_3"
-const val VERSION = 2
-const val ROOT_PACKAGE = "examples.cordapps.three"
+const val NAME = "CORDAPP_1"
+const val VERSION = 1
+const val ROOT_PACKAGE = "examples.cordapps.one"
 
-@Named
-class CordApp3Descriptor : CordAppDescriptor {
+@Named("CordApp1Descriptor_V1")
+internal class DeclarativeCordAppDescriptor : CordAppDescriptor {
 
     override val name = CordAppDescriptor.Name(NAME)
 

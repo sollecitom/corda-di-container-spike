@@ -6,3 +6,17 @@ dependencies {
 
     compile project(":corda")
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes(
+                "Implementation-Title": "net.corda.spikes.di-container-spike.cordapp3",
+                "Implementation-Version": "1",
+        )
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+build.dependsOn(fatJar)

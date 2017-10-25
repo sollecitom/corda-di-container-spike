@@ -20,7 +20,7 @@ internal class ReturnTemperature @Inject constructor(private val sensor: Sensor<
     @PostConstruct
     internal fun logInitialTemperature() {
 
-        logger.info("Version 1 - Initial sensor temperature: ${sensor.read().value}.")
+        logger.info("Version 2 - Initial sensor temperature: ${sensor.read().value}.")
     }
 
     @Suspendable
