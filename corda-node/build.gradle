@@ -6,15 +6,16 @@ dependencies {
     compile "org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version"
     runtime "org.springframework.boot:spring-boot-starter-log4j2:$spring_boot_version"
 
-    // TODO whether defined in Gradle or added as JARs to the classpath, dependencies behave the same way
-//    runtime project(":cordapp-1")
-//    runtime project(":cordapp-2")
-//    runtime project(":cordapp-2v2")
-//    runtime project(":cordapp-3")
-
-    // TODO whether defined in Gradle or added as JARs to the classpath, dependencies behave the same way
     runtime project(":corda-di-cordapps-resolver")
     runtime project(":corda-noop-flows-registry")
 
     compile project(":corda")
+}
+
+clean.doFirst {
+    delete "./libs"
+}
+
+build.doFirst {
+    file("./libs").mkdirs()
 }

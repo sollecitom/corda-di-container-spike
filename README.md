@@ -9,7 +9,6 @@ A Dependency Injection container (Spring Boot) is used to:
 - Find and inject types inside the same Corda module.
 - Read properties in a cascading way inside the same Corda module.
 - Find and inject types from a module's Corda dependencies, thus enabling a plugin-based architecture.
-- Find and inject types in a Corda module from non-Corda modules (thus enabling CordApps loading).
 - Find and inject types within a CordApp module (thus enabling DI in initiated flows).
 
 ## Notes and remarks
@@ -18,11 +17,19 @@ With regards to what stated above, some remarks:
 
 - Most modules, including all CordApps, only depend on `javax.inject` and `JSR 250`, meaning they're completely Spring-agnostic.
 - Any Dependency Injection container compatible with `javax.inject`, `JSR 250` and package scanning will work.
-- The entire project took roughly 3 hours, including documentation. It's written in Kotlin and works with both JDK8 and JDK9.
+- The di-cordapps-resolver is able to load multiple versions of the same CordApp at the same time.
+- The entire project took roughly 5 hours, including separate class loaders per CordApp per version and documentation. It's written in Kotlin and works with both JDK8 and JDK9.
 
 ## How to run it
 
-Run/Debug `NodeStarter.kt` and watch the console. Then open `Node` and follow the code.
+- Run `./gradlew clean build -x test` from within the project directory.
+    - cp ./cordapp-1/build/libs/cordapp-1-all-1.0-SNAPSHOT.jar ./corda-node/libs
+    - cp ./cordapp-2/build/libs/cordapp-2-all-1.0-SNAPSHOT.jar ./corda-node/libs
+    - cp ./cordapp-2v2/build/libs/cordapp-2v2-all-2.0-SNAPSHOT.jar ./corda-node/libs
+    - cp ./cordapp-3/build/libs/cordapp-3-all-1.0-SNAPSHOT.jar ./corda-node/libs
+
+- Copy all fat jars generated as build outputs for CordApps under `corda-node/libs` folder.
+- Run/Debug `NodeStarter.kt` and watch the console. Then open `Node` and follow the code.
 
 ## Project modules structure
 
@@ -37,9 +44,6 @@ Relevant dependencies:
 - corda
 - corda-di-cordapps-resolver (runtime)
 - corda-noop-flows-registry (runtime)
-- cordapp-1
-- cordapp-2
-- cordapp-3
 
 ### corda
 
@@ -82,6 +86,16 @@ Relevant dependencies:
 
 This module defines a flow initiated by `QueryClusterAverageTemperature` defined in `cordapp-1`, which uses the Dependency Injection 
 Container to inject dependencies inside the flow, and to read properties in a cascading way.
+
+Relevant dependencies:
+- javax.inject:javax.inject
+- javax.annotation:jsr250-api
+- corda
+- cordapp-1
+
+### cordapp-2v2
+
+This module represents a newer version of module `cordapp-2`. It has the same packages and types, with different behaviour.
 
 Relevant dependencies:
 - javax.inject:javax.inject
