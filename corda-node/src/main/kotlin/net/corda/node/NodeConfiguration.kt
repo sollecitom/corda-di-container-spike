@@ -1,13 +1,22 @@
 package net.corda.node
 
-import org.springframework.beans.factory.annotation.Value
-import javax.inject.Inject
+import com.natpryce.konfig.Key
+import net.corda.utils.Properties
 import javax.inject.Named
 
-const val NETWORK_HOST = "config.node.network.host"
-const val NETWORK_PORT = "config.node.network.port"
+private const val NETWORK_HOST = "config.node.network.host"
+private const val NETWORK_PORT = "config.node.network.port"
 
-// TODO property values injection requires annotations specific to Spring (@Value), and it won't work without a Spring-compatible DI Container.
+private const val PROPERTIES = "/application.properties"
+
 @Named
-internal class NodeConfiguration @Inject constructor(@Value("\${$NETWORK_HOST}") override val networkHost: String,
-                                                    @Value("\${$NETWORK_PORT}") override val networkPort: Int) : Node.Configuration
+internal class NodeConfiguration : Properties(PROPERTIES, NodeConfiguration::class), Node.Configuration {
+
+    companion object {
+        private val hostKey = Key(NETWORK_HOST) { _, value -> value }
+        private val portKey = Key(NETWORK_PORT) { _, value -> value.toInt() }
+    }
+
+    override val networkHost = get(hostKey)
+    override val networkPort = get(portKey)
+}

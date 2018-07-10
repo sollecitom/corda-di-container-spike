@@ -25,6 +25,7 @@ With regards to what stated above, some remarks:
 - Run `./gradlew clean build -x test` from within the project directory.
 - Run `find . -name "cordapp*all*.jar" | xargs -IjarFile cp -u jarFile ./corda-node/libs`
 - Run/Debug `NodeStarter.kt` and watch the console. Then open `Node` and follow the code.
+- (After changes to CorDapps) run `rm -rf ./corda-node/libs/*` and start again from point 1.
 
 ## Project modules structure
 
