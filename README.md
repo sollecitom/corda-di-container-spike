@@ -23,12 +23,7 @@ With regards to what stated above, some remarks:
 ## How to run it
 
 - Run `./gradlew clean build -x test` from within the project directory.
-    - cp ./cordapp-1/build/libs/cordapp-1-all-1.0-SNAPSHOT.jar ./corda-node/libs
-    - cp ./cordapp-2/build/libs/cordapp-2-all-1.0-SNAPSHOT.jar ./corda-node/libs
-    - cp ./cordapp-2v2/build/libs/cordapp-2v2-all-2.0-SNAPSHOT.jar ./corda-node/libs
-    - cp ./cordapp-3/build/libs/cordapp-3-all-1.0-SNAPSHOT.jar ./corda-node/libs
-
-- Copy all fat jars generated as build outputs for CordApps under `corda-node/libs` folder.
+- Run `find . -name "cordapp*all*.jar" | xargs -IjarFile cp -u jarFile ./corda-node/libs`
 - Run/Debug `NodeStarter.kt` and watch the console. Then open `Node` and follow the code.
 
 ## Project modules structure

@@ -2,6 +2,7 @@ package net.corda.node
 
 import org.springframework.boot.Banner
 import org.springframework.boot.SpringApplication
+import org.springframework.boot.WebApplicationType
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.ComponentScan
 
@@ -14,7 +15,7 @@ internal fun main(args: Array<String>) {
     val application = SpringApplication(NodeStarter::class.java)
 
     application.setBannerMode(Banner.Mode.OFF)
-    application.isWebEnvironment = false
+    application.webApplicationType = WebApplicationType.NONE
 
     application.run(*args)
 }
