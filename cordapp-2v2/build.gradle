@@ -1,13 +1,7 @@
 group 'net.corda.spikes.di-container-spike'
 version '2.0-SNAPSHOT'
 
-buildscript {
-    ext.konfig_version = '1.6.1.0'
-}
-
 dependencies {
-    compile "com.natpryce:konfig:$konfig_version"
-
     compile project(":cordapp-1")
 
     compile project(":corda")
