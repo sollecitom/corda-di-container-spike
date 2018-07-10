@@ -12,7 +12,7 @@ internal class NoOpFlowsRegistry @Inject constructor(private val logNewBinding: 
 
     override fun <INITIATING : Flows.Initiating<*>> register(initiating: KClass<out INITIATING>, initiated: Flows.Initiated) {
 
-        val newSet = bindings.computeIfAbsent(initiating, { _ -> mutableSetOf() })
+        val newSet = bindings.computeIfAbsent(initiating) { _ -> mutableSetOf() }
         newSet += initiated
         logNewBinding.apply(initiating, initiated, newSet)
     }

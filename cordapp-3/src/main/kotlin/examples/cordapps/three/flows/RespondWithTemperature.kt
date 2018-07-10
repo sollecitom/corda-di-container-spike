@@ -6,7 +6,7 @@ import net.corda.flows.Flows
 import net.corda.flows.Suspendable
 import javax.inject.Named
 
-const val VALUE = 10.0
+private const val VALUE = 10.0
 
 @Named
 internal class RespondWithTemperature : Flows.Initiated {

@@ -6,7 +6,7 @@ import javax.inject.Named
 import kotlin.reflect.KClass
 
 @Named
-private class ConsoleNewBindingLogger : LogNewBinding {
+internal class ConsoleNewBindingLogger : LogNewBinding {
 
     companion object {
         private val logger = loggerFor<ConsoleNewBindingLogger>()
