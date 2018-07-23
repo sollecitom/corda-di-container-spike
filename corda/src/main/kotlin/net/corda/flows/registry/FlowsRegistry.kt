@@ -3,7 +3,7 @@ package net.corda.flows.registry
 import net.corda.flows.Flows
 import kotlin.reflect.KClass
 
-// TODO this should not be available to CordApps but there's no point in creating another module for the sake of this example.
+// TODO this should not be available to Cordapps but there's no point in creating another module for the sake of this example.
 interface FlowsRegistry {
 
     fun <INITIATING : Flows.Initiating<*>> register(initiating: KClass<out INITIATING>, initiated: Flows.Initiated)

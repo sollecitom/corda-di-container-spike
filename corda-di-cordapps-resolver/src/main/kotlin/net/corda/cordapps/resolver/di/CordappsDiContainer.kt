@@ -1,7 +1,7 @@
 package net.corda.cordapps.resolver.di
 
-import net.corda.cordapps.CordApp
-import net.corda.cordapps.resolver.CordAppsContainer
+import net.corda.cordapps.Cordapp
+import net.corda.cordapps.resolver.CordappsContainer
 import net.corda.flows.Flows
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import java.io.File
@@ -12,37 +12,37 @@ import java.util.jar.Manifest
 import javax.inject.Named
 
 @Named
-internal class CordAppsDiContainer : CordAppsContainer {
+internal class CordappsDiContainer : CordappsContainer {
 
     companion object {
         const val ROOT_PACKAGE_SEPARATOR = ";"
     }
 
-    override val cordApps: Set<CordApp> by lazy {
+    override val cordapps: Set<Cordapp> by lazy {
 
         val libs = File("corda-node/libs")
-        libs.walkTopDown().filter(this::isJar).map(this::toCordApp).toSet()
+        libs.walkTopDown().filter(this::isJar).map(this::toCordapp).toSet()
     }
 
-    private fun toCordApp(jarFile: File): CordApp {
+    private fun toCordapp(jarFile: File): Cordapp {
 
         return JarInputStream(jarFile.inputStream()).use { jar ->
             val manifest = jar.manifest
             val cordAppName = manifest["Implementation-Title"]
             val cordAppVersion = manifest["Implementation-Version"]?.toInt()
-            val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet() ?: throw IllegalArgumentException("CordApps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapps.one;com.apache.commons'!")
+            val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet() ?: throw IllegalArgumentException("Cordapps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapps.one;com.apache.commons'!")
             if (cordAppName == null || cordAppVersion == null) {
-                throw Exception("Invalid CordApp specification.")
+                throw Exception("Invalid Cordapp specification.")
             }
             CordaAppImpl(cordAppName, cordAppVersion, jarFile, rootPackages)
         }
     }
 
-    private data class CordaAppImpl(override val name: String, override val version: Int, private val jarFile: File, private val packages: Set<String>) : CordApp {
+    private data class CordaAppImpl(override val name: String, override val version: Int, private val jarFile: File, private val packages: Set<String>) : Cordapp {
 
         override val initiatedFlows: Set<Flows.Initiated> by lazy {
 
-            // TODO here we have a classLoader per CordApp per version, along with a separate ApplicationContext.
+            // Here we have a classLoader per Cordapp per version, along with a separate ApplicationContext.
             val context = AnnotationConfigApplicationContext()
             context.classLoader = classLoader
             context.scan(*packages.toTypedArray())

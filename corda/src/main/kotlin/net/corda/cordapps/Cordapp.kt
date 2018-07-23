@@ -2,7 +2,7 @@ package net.corda.cordapps
 
 import net.corda.flows.Flows
 
-interface CordApp {
+interface Cordapp {
 
     val name: String
     val version: Int

@@ -9,23 +9,22 @@ A Dependency Injection container (Spring Boot) is used to:
 - Find and inject types inside the same Corda module.
 - Read properties in a cascading way inside the same Corda module.
 - Find and inject types from a module's Corda dependencies, thus enabling a plugin-based architecture.
-- Find and inject types within a CordApp module (thus enabling DI in initiated flows).
+- Find and inject types within a Cordapp module (thus enabling DI in initiated flows).
 
 ## Notes and remarks
 
 With regards to what stated above, some remarks:
 
-- Most modules, including all CordApps, only depend on `javax.inject` and `JSR 250`, meaning they're completely Spring-agnostic.
+- Most modules, including all Cordapps, only depend on `javax.inject` and `JSR 250`, meaning they're completely Spring-agnostic.
 - Any Dependency Injection container compatible with `javax.inject`, `JSR 250` and package scanning will work.
-- The di-cordapps-resolver is able to load multiple versions of the same CordApp at the same time.
-- The entire project took roughly 5 hours, including separate class loaders per CordApp per version and documentation. It's written in Kotlin and works with both JDK8 and JDK9.
+- The `di-cordapps-resolver` is able to load multiple versions of the same Cordapp at the same time.
 
 ## How to run it
 
-- Run `./gradlew clean build -x test` from within the project directory.
+- Run `rm -rf ./corda-node/libs/*` and `./gradlew clean build -x test` from within the project directory.
 - Run `find . -name "cordapp*all*.jar" | xargs -IjarFile cp -u jarFile ./corda-node/libs`
 - Run/Debug `NodeStarter.kt` and watch the console. Then open `Node` and follow the code.
-- (After changes to CorDapps) run `rm -rf ./corda-node/libs/*` and start again from point 1.
+- (After changes to Cordapps) start again from point 1.
 
 ## Project modules structure
 
@@ -43,8 +42,8 @@ Relevant dependencies:
 
 ### corda
 
-This module defines types similar to those in Corda, which are available for CordApps. 
-For the sake of saving some time, it also has types which should not be available to CordApps, but in a real scenario it would be trivial 
+This module defines types similar to those in Corda, which are available for Cordapps. 
+For the sake of saving some time, it also has types which should not be available to Cordapps, but in a real scenario it would be trivial 
 to migrate them in a separate module.
 
 Relevant dependencies:
@@ -53,7 +52,7 @@ Relevant dependencies:
 
 ### corda-di-cordapps-resolver
 
-This module provides a CordApps resolution mechanism based on a Dependency Injection container.
+This module provides a Cordapps resolution mechanism based on a Dependency Injection container.
 It is used at runtime by `corda-node`.
 
 Relevant dependencies:
