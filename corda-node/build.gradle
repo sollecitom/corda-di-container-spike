@@ -9,7 +9,7 @@ dependencies {
     runtime project(":corda-di-cordapps-resolver")
     runtime project(":corda-noop-flows-registry")
 
-    compile project(":corda")
+    compile project(":cordapp-api")
 }
 
 clean.doFirst {

@@ -1,5 +1,5 @@
 rootProject.name = 'parent'
-include 'corda'
+include 'cordapp-api'
 include 'cordapp-1'
 include 'cordapp-2'
 include 'cordapp-2v2'
@@ -7,4 +7,3 @@ include 'cordapp-3'
 include 'corda-node'
 include 'corda-di-cordapps-resolver'
 include 'corda-noop-flows-registry'
-
