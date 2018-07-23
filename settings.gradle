@@ -1,9 +1,18 @@
 rootProject.name = 'parent'
 include 'cordapp-api'
-include 'cordapp-1'
-include 'cordapp-2'
-include 'cordapp-2v2'
-include 'cordapp-3'
 include 'corda-node'
 include 'corda-di-cordapps-resolver'
 include 'corda-noop-flows-registry'
+
+//Cordapps
+include ':cordapp-1'
+project(':cordapp-1').projectDir = new File('./cordapps/cordapp-1')
+
+include ':cordapp-2'
+project(':cordapp-2').projectDir = new File('./cordapps/cordapp-2')
+
+include ':cordapp-2v2'
+project(':cordapp-2v2').projectDir = new File('./cordapps/cordapp-2v2')
+
+include ':cordapp-3'
+project(':cordapp-3').projectDir = new File('./cordapps/cordapp-3')
