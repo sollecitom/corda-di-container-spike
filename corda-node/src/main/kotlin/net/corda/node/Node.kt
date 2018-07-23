@@ -20,11 +20,12 @@ internal class Node(private val cordappsContainer: CordappsContainer, private va
             logger.info("Joining Corda network at address $networkHost:$networkPort.")
         }
 
-        val cordApps = cordappsContainer.cordapps
-        cordApps.forEach { cordApp ->
+        // TODO subscribe to events instead
+        val cordapps = cordappsContainer.cordapps()
+        cordapps.forEach { cordapp ->
 
-            logger.info("Registering Cordapp ${cordApp.name} with version ${cordApp.version}.")
-            cordApp.initiatedFlows.forEach { initiated ->
+            logger.info("Registering Cordapp ${cordapp.name} with version ${cordapp.version}.")
+            cordapp.initiatedFlows.forEach { initiated ->
                 initiated.initiatedBy.forEach { initiating ->
                     flowsRegistry.register(initiating, initiated)
                 }

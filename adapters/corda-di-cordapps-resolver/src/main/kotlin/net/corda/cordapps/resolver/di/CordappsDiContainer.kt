@@ -18,23 +18,24 @@ internal class CordappsDiContainer : CordappsContainer {
         const val ROOT_PACKAGE_SEPARATOR = ";"
     }
 
-    override val cordapps: Set<Cordapp> by lazy {
+    override fun cordapps(): Set<Cordapp> {
 
         val libs = File("corda-node/libs")
-        libs.walkTopDown().filter(this::isJar).map(this::toCordapp).toSet()
+        // TODO use a watcher to pick up events
+        return libs.walkTopDown().filter(this::isJar).map(this::toCordapp).toSet()
     }
 
     private fun toCordapp(jarFile: File): Cordapp {
 
         return JarInputStream(jarFile.inputStream()).use { jar ->
             val manifest = jar.manifest
-            val cordAppName = manifest["Implementation-Title"]
-            val cordAppVersion = manifest["Implementation-Version"]?.toInt()
+            val cordappName = manifest["Implementation-Title"]
+            val cordappVersion = manifest["Implementation-Version"]?.toInt()
             val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet() ?: throw IllegalArgumentException("Cordapps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapps.one;com.apache.commons'!")
-            if (cordAppName == null || cordAppVersion == null) {
+            if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            CordaAppImpl(cordAppName, cordAppVersion, jarFile, rootPackages)
+            CordaAppImpl(cordappName, cordappVersion, jarFile, rootPackages)
         }
     }
 
