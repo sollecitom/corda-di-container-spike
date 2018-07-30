@@ -90,3 +90,7 @@ docs/virtualenv/
 *.swo
 
 /.idea/dictionaries/
+
+# Node plugins and Cordapps
+node/plugins/*
+node/cordapps/*

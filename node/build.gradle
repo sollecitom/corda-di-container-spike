@@ -7,7 +7,6 @@ dependencies {
     runtime "org.springframework.boot:spring-boot-starter-log4j2:$spring_boot_version"
 
     runtime project(":corda-di-cordapps-resolver")
-    runtime project(":corda-noop-flows-registry")
 
     compile project(":commons")
     compile project(":node-api")
@@ -15,9 +14,11 @@ dependencies {
 }
 
 clean.doFirst {
-    delete "./libs"
+    delete "./plugins"
+    delete "./cordapps"
 }
 
-build.doFirst {
-    file("./libs").mkdirs()
+clean.doLast {
+    file("./plugins").mkdirs()
+    file("./cordapps").mkdirs()
 }

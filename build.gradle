@@ -82,18 +82,18 @@ subprojects { it ->
         }
     }
 //    TODO remove this and replace with standard log4j2.xml file in the resources
-    sourceSets {
-        main {
-            resources {
-                srcDir "../config/dev"
-            }
-        }
-        test {
-            resources {
-                srcDir "../config/test"
-            }
-        }
-    }
+//    sourceSets {
+//        main {
+//            resources {
+//                srcDir "../config/dev"
+//            }
+//        }
+//        test {
+//            resources {
+//                srcDir "../config/test"
+//            }
+//        }
+//    }
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
         compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"

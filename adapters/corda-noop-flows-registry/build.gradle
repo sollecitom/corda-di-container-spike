@@ -4,3 +4,19 @@ version '1.0-SNAPSHOT'
 dependencies {
     compile project(":node-api")
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes(
+                "Specification-Title": "net.corda.node.api.flows.registry.FlowsRegistry",
+                "Specification-Version": version,
+                "Implementation-Title": "net.corda.cordapp.api.flows.registry.NoOpFlowsRegistry",
+                "Implementation-Version": version
+        )
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+build.dependsOn(fatJar)

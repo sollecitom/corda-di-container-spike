@@ -7,7 +7,7 @@ import javax.inject.Named
 import kotlin.reflect.KClass
 
 @Named
-internal class NoOpFlowsRegistry @Inject constructor(private val logNewBinding: LogNewBinding) : FlowsRegistry {
+class NoOpFlowsRegistry @Inject constructor(private val logNewBinding: LogNewBinding) : FlowsRegistry {
 
     // TODO check for concurrent access
     private val bindings: MutableMap<KClass<out Flows.Initiating<*>>, MutableSet<Flows.Initiated>> = mutableMapOf()
@@ -20,7 +20,7 @@ internal class NoOpFlowsRegistry @Inject constructor(private val logNewBinding: 
     }
 }
 
-internal interface LogNewBinding {
+interface LogNewBinding {
 
     fun <INITIATING : Flows.Initiating<*>> apply(initiating: KClass<INITIATING>, initiated: Flows.Initiated, allInitiatedFlows: Set<Flows.Initiated>)
 }

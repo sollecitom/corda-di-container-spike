@@ -21,8 +21,10 @@ With regards to what stated above, some remarks:
 
 ## How to run it
 
-- Run `rm -rf ./node/libs/*` and `./gradlew clean build -x test` from within the project directory.
-- Run `find . -name "cordapp*all*.jar" | xargs -IjarFile cp -u jarFile ./node/libs`
+- Run `./gradlew clean build -x test` from within the project directory.
+- (Only the first time) add directory node/plugins to the classpath of module "node" in Intellij (Intellij does not allow overriding the classpath from Run/Debug configuration, https://youtrack.jetbrains.net/issue/IDEA-160167).
+- Run `find ./adapters -name "*all*.jar" | xargs -IjarFile cp -u jarFile ./node/plugins`.
+- Run `find ./cordapps -name "cordapp*all*.jar" | xargs -IjarFile cp -u jarFile ./node/cordapps`.
 - Run/Debug `NodeStarter.kt` and watch the console. Then open `Node` and follow the code.
 - (After changes to Cordapps) start again from point 1.
 

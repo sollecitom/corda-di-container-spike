@@ -20,7 +20,7 @@ internal class CordappsDiContainer : CordappsContainer {
 
     override fun cordapps(): Set<Cordapp> {
 
-        val libs = File("node/libs")
+        val libs = File("node/cordapps")
         // TODO use a watcher to pick up events
         return libs.walkTopDown().filter(this::isJar).map(this::toCordapp).toSet()
     }
