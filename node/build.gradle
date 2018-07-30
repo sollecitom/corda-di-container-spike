@@ -6,19 +6,11 @@ dependencies {
     compile "org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version"
     runtime "org.springframework.boot:spring-boot-starter-log4j2:$spring_boot_version"
 
-    runtime project(":corda-di-cordapps-resolver")
-
     compile project(":commons")
     compile project(":node-api")
     compile project(":cordapp-api")
-}
 
-clean.doFirst {
-    delete "./plugins"
-    delete "./cordapps"
-}
+    runtime project(":corda-di-cordapps-resolver")
 
-clean.doLast {
-    file("./plugins").mkdirs()
-    file("./cordapps").mkdirs()
+    runtime fileTree(include: ['*.jar'], dir: 'plugins')
 }

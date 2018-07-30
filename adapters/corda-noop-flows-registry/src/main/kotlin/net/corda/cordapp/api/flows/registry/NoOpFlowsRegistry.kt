@@ -2,10 +2,12 @@ package net.corda.cordapp.api.flows.registry
 
 import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.flows.registry.FlowsRegistry
+import javax.annotation.Priority
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
 
+@Priority(Int.MAX_VALUE)
 @Named
 class NoOpFlowsRegistry @Inject constructor(private val logNewBinding: LogNewBinding) : FlowsRegistry {
 

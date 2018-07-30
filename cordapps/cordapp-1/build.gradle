@@ -18,4 +18,13 @@ task fatJar(type: Jar) {
     with jar
 }
 
+// TODO try and make it shared across Cordapps
+fatJar.doLast {
+    def nodeCordappsPath = "${project.parent.rootDir.path}" + File.separator + "node" + File.separator + "cordapps"
+    copy {
+        from fatJar.archivePath
+        into nodeCordappsPath
+    }
+}
+
 build.dependsOn(fatJar)

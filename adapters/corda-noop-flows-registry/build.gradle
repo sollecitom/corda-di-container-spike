@@ -19,4 +19,12 @@ task fatJar(type: Jar) {
     with jar
 }
 
+fatJar.doLast {
+    def nodePluginsPath = "${project.parent.rootDir.path}" + File.separator + "node" + File.separator + "plugins"
+    copy {
+        from fatJar.archivePath
+        into nodePluginsPath
+    }
+}
+
 build.dependsOn(fatJar)

@@ -20,4 +20,12 @@ task fatJar(type: Jar) {
     with jar
 }
 
+fatJar.doLast {
+    def nodeCordappsPath = "${project.parent.rootDir.path}" + File.separator + "node" + File.separator + "cordapps"
+    copy {
+        from fatJar.archivePath
+        into nodeCordappsPath
+    }
+}
+
 build.dependsOn(fatJar)
