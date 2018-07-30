@@ -36,9 +36,6 @@ libs/quasar.jar
 .idea/markdown-navigator
 /gradle-plugins/.idea/
 
-# Include the -parameters compiler option by default in IntelliJ required for serialization.
-!.idea/compiler.xml
-
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
