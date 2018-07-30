@@ -5,6 +5,7 @@ dependencies {
     compile project(":node-api")
 }
 
+// TODO try and use a normal JAR rather than a fat one (also, for Cordapps)
 task fatJar(type: Jar) {
     manifest {
         attributes(
