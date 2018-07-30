@@ -5,6 +5,7 @@ dependencies {
     compile project(":cordapp-api")
 }
 
+// TODO try and use a normal JAR rather than a fat one, for all Cordapps
 task fatJar(type: Jar) {
     manifest {
         attributes(

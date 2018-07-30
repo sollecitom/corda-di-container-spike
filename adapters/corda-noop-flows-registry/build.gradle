@@ -1,12 +1,12 @@
+// TODO try and remove this from all sub-projects
 group 'net.corda.spikes.di-container-spike'
 version '1.0-SNAPSHOT'
 
 dependencies {
-    compile project(":node-api")
+    compileOnly project(":node-api")
 }
 
-// TODO try and use a normal JAR rather than a fat one (also, for Cordapps)
-task fatJar(type: Jar) {
+jar {
     manifest {
         attributes(
                 "Specification-Title": "net.corda.node.api.flows.registry.FlowsRegistry",
@@ -15,17 +15,15 @@ task fatJar(type: Jar) {
                 "Implementation-Version": version
         )
     }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+    baseName = project.name
 }
 
-fatJar.doLast {
+jar.doLast {
     def nodePluginsPath = "${project.parent.rootDir.path}" + File.separator + "node" + File.separator + "plugins"
     copy {
-        from fatJar.archivePath
+        from jar.archivePath
         into nodePluginsPath
     }
 }
 
-build.dependsOn(fatJar)
+build.dependsOn(jar)
