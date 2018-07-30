@@ -3,6 +3,7 @@ package net.corda.node.api.flows.registry
 import net.corda.cordapp.api.flows.Flows
 import kotlin.reflect.KClass
 
+// This is just to keep a similarity with the current structure in Corda. Ideally, Cordapps should process flows themselves.
 interface FlowsRegistry {
 
     fun <INITIATING : Flows.Initiating<*>> register(initiating: KClass<out INITIATING>, initiated: Flows.Initiated)

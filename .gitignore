@@ -89,8 +89,4 @@ docs/virtualenv/
 *.swn
 *.swo
 
-# Files you may find useful to have in your working directory.
-PLAN
-NOTES
-TODO
 /.idea/dictionaries/
