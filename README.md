@@ -7,9 +7,10 @@ This project is a showcase of how Corda could benefit from a Dependency Injectio
 A Dependency Injection container (Spring Boot) is used to:
 
 - Find and inject types inside the same Corda module.
-- Read properties in a cascading way inside the same Corda module.
-- Find and inject types from a module's Corda dependencies, thus enabling a plugin-based architecture.
-- Find and inject types within a Cordapp module (thus enabling DI in initiated flows).
+- Read application properties in a cascading fashion.
+- Find and inject types from a module's dependencies.
+- Find and inject types from JARs in a specified, thus enabling a plugin-based architecture.
+- Find and inject types within a Cordapp module (thus allowing initiated flows to be passed customer defined types through the constructor).
 
 ## Notes and remarks
 
@@ -31,95 +32,40 @@ With regards to what stated above, some remarks:
 
 The active part of the Corda platform. It defines the entry point and, when run, it wires and starts the node.
 
-Relevant dependencies:
-- javax.inject:javax.inject
-- javax.annotation:jsr250-api
-- spring-boot
-- node-api
-- cordapp-api
-- corda-di-cordapps-resolver (runtime)
-- corda-noop-flows-registry (runtime)
-
 ### node-api
 
 This module defines types used by the node to do certain operations. It is imported by the adapters.
-
-Relevant dependencies:
-- cordapp-api
-- javax.inject:javax.inject
-- javax.annotation:jsr250-api
 
 ### cordapp-api
 
 This module defines types similar to those in Corda, which are available for Cordapps.
 
-Relevant dependencies:
-- javax.inject:javax.inject
-- javax.annotation:jsr250-api
-
 ### commons
 
 This module defines types that are common to most modules. Ideally this should be replaced by a collection of domain modules, but for the sake of the exercise a common set works fine.
-
-Relevant dependencies:
-- javax.inject:javax.inject
-- javax.annotation:jsr250-api
 
 ### corda-di-cordapps-resolver
 
 This module provides a Cordapps resolution mechanism based on a Dependency Injection container.
 It is used at runtime by `node`.
 
-Relevant dependencies:
-- javax.inject:javax.inject
-- javax.annotation:jsr250-api
-- node-api
-
 ### corda-noop-flows-registry
 
 This module provides a no-op flows registry implementation that simply logs new bindings.
-It is used at runtime by `node`.
-
-Relevant dependencies:
-- javax.inject:javax.inject
-- javax.annotation:jsr250-api
-- node-api
+It produces a JAR plugin that `node` can use.
 
 ### cordapp-1
 
 This module defines an initiating flow, `QueryClusterAverageTemperature`, along with a domain model.
 
-Relevant dependencies:
-- cordapp-api
-
 ### cordapp-2
 
-This module defines a flow initiated by `QueryClusterAverageTemperature` defined in `cordapp-1`, which uses the Dependency Injection 
-Container to inject dependencies inside the flow, and to read properties in a cascading way.
-
-Relevant dependencies:
-- javax.inject:javax.inject
-- javax.annotation:jsr250-api
-- cordapp-api
-- cordapp-1
+This module defines a flow initiated by `QueryClusterAverageTemperature` defined in `cordapp-1`, which uses the Dependency Injection Container to inject dependencies inside the flow, and to read properties in a cascading way.
 
 ### cordapp-2v2
 
 This module represents a newer version of module `cordapp-2`. It has the same packages and types, with different behaviour.
 
-Relevant dependencies:
-- javax.inject:javax.inject
-- javax.annotation:jsr250-api
-- cordapp-api
-- cordapp-1
-
 ### cordapp-3
 
-This module defines a flow initiated by `QueryClusterAverageTemperature` defined in `cordapp-1`, which uses the Dependency Injection 
-Container to inject dependencies inside the flow.
-
-Relevant dependencies:
-- javax.inject:javax.inject
-- javax.annotation:jsr250-api
-- cordapp-api
-- cordapp-1
+This module defines a flow initiated by `QueryClusterAverageTemperature` defined in `cordapp-1`, which uses the Dependency Injection Container to inject dependencies inside the flow.

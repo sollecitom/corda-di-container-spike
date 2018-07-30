@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Named
 
+// TODO show how ServiceHub could be injected instead
 @Named
 internal class ReturnTemperature @Inject constructor(private val sensor: Sensor<Temperature>) : Flows.Initiated {
 
