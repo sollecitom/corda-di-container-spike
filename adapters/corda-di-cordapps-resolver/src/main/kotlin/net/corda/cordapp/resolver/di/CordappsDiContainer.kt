@@ -35,11 +35,11 @@ internal class CordappsDiContainer : CordappsContainer {
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            CordaAppImpl(cordappName, cordappVersion, jarFile, rootPackages)
+            CordaAppImpl(cordappName, cordappVersion, jarFile, rootPackages, this.javaClass.classLoader)
         }
     }
 
-    private data class CordaAppImpl(override val name: String, override val version: Int, private val jarFile: File, private val packages: Set<String>) : Cordapp {
+    private data class CordaAppImpl(override val name: String, override val version: Int, private val jarFile: File, private val packages: Set<String>, private val parentClassLoader: ClassLoader) : Cordapp {
 
         override val initiatedFlows: Set<Flows.Initiated> by lazy {
 
@@ -53,7 +53,7 @@ internal class CordappsDiContainer : CordappsContainer {
 
         private val classLoader: ClassLoader by lazy {
 
-            URLClassLoader(arrayOf(jarFile.toURI().toURL()))
+            URLClassLoader(arrayOf(jarFile.toURI().toURL()), parentClassLoader)
         }
     }
 
