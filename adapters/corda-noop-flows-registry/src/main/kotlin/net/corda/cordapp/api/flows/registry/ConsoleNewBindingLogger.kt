@@ -12,8 +12,8 @@ internal class ConsoleNewBindingLogger : LogNewBinding {
         private val logger = loggerFor<ConsoleNewBindingLogger>()
     }
 
-    override fun <INITIATING : Flows.Initiating<*>> apply(initiating: KClass<INITIATING>, initiated: Flows.Initiated, newSet: Set<Flows.Initiated>) {
+    override fun <INITIATING : Flows.Initiating<*>> apply(initiating: KClass<INITIATING>, initiated: Flows.Initiated, allInitiatedFlows: Set<Flows.Initiated>) {
 
-        logger.info("New binding $initiated registered for initiating flow ${initiating.qualifiedName}. Bindings are now $newSet.")
+        logger.info("New binding $initiated registered for initiating flow ${initiating.qualifiedName}. Bindings are now $allInitiatedFlows.")
     }
 }

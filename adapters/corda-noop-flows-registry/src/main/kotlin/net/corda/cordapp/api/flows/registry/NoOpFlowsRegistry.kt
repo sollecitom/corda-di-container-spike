@@ -22,5 +22,5 @@ internal class NoOpFlowsRegistry @Inject constructor(private val logNewBinding: 
 
 internal interface LogNewBinding {
 
-    fun <INITIATING : Flows.Initiating<*>> apply(initiating: KClass<INITIATING>, initiated: Flows.Initiated, newSet: Set<Flows.Initiated>)
+    fun <INITIATING : Flows.Initiating<*>> apply(initiating: KClass<INITIATING>, initiated: Flows.Initiated, allInitiatedFlows: Set<Flows.Initiated>)
 }
