@@ -1,0 +1,22 @@
+group 'net.corda.spikes.di-container-spike'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    compile "org.springframework.boot:spring-boot:$spring_boot_version"
+    compile "org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version"
+    runtime "org.springframework.boot:spring-boot-starter-log4j2:$spring_boot_version"
+
+    runtime project(":corda-di-cordapps-resolver")
+    runtime project(":corda-noop-flows-registry")
+
+    compile project(":node-api")
+    compile project(":cordapp-api")
+}
+
+clean.doFirst {
+    delete "./libs"
+}
+
+build.doFirst {
+    file("./libs").mkdirs()
+}

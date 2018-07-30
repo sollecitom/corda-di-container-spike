@@ -1,7 +1,8 @@
 rootProject.name = 'parent'
 
+include 'node'
+include 'node-api'
 include 'cordapp-api'
-include 'corda-node'
 
 // Adapters
 include ':corda-di-cordapps-resolver'
@@ -9,7 +10,6 @@ project(':corda-di-cordapps-resolver').projectDir = new File('./adapters/corda-d
 
 include ':corda-noop-flows-registry'
 project(':corda-noop-flows-registry').projectDir = new File('./adapters/corda-noop-flows-registry')
-
 
 // Cordapps
 include ':cordapp-1'

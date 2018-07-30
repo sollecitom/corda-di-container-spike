@@ -1,10 +1,10 @@
 package examples.cordapps.one.flows
 
 import examples.cordapps.one.domain.Temperature
-import net.corda.flows.Flows
-import net.corda.flows.Suspendable
-import net.corda.flows.receive
-import net.corda.network.Party
+import net.corda.cordapp.api.flows.Flows
+import net.corda.cordapp.api.flows.Suspendable
+import net.corda.cordapp.api.flows.receive
+import net.corda.cordapp.api.network.Party
 
 class QueryClusterAverageTemperature(private val parties: Set<Party>) : Flows.Initiating<Temperature> {
 

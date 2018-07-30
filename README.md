@@ -21,14 +21,14 @@ With regards to what stated above, some remarks:
 
 ## How to run it
 
-- Run `rm -rf ./corda-node/libs/*` and `./gradlew clean build -x test` from within the project directory.
-- Run `find . -name "cordapp*all*.jar" | xargs -IjarFile cp -u jarFile ./corda-node/libs`
+- Run `rm -rf ./node/libs/*` and `./gradlew clean build -x test` from within the project directory.
+- Run `find . -name "cordapp*all*.jar" | xargs -IjarFile cp -u jarFile ./node/libs`
 - Run/Debug `NodeStarter.kt` and watch the console. Then open `Node` and follow the code.
 - (After changes to Cordapps) start again from point 1.
 
 ## Project modules structure
 
-### corda-node
+### node
 
 The active part of the Corda platform. It defines the entry point and, when run, it wires and starts the node.
 
@@ -36,15 +36,23 @@ Relevant dependencies:
 - javax.inject:javax.inject
 - javax.annotation:jsr250-api
 - spring-boot
-- corda
+- node-api
+- cordapp-api
 - corda-di-cordapps-resolver (runtime)
 - corda-noop-flows-registry (runtime)
 
-### corda
+### node-api
 
-This module defines types similar to those in Corda, which are available for Cordapps. 
-For the sake of saving some time, it also has types which should not be available to Cordapps, but in a real scenario it would be trivial 
-to migrate them in a separate module.
+This module defines types used by the node to do certain operations. It is imported by the adapters.
+
+Relevant dependencies:
+- cordapp-api
+- javax.inject:javax.inject
+- javax.annotation:jsr250-api
+
+### cordapp-api
+
+This module defines types similar to those in Corda, which are available for Cordapps.
 
 Relevant dependencies:
 - javax.inject:javax.inject
@@ -53,29 +61,29 @@ Relevant dependencies:
 ### corda-di-cordapps-resolver
 
 This module provides a Cordapps resolution mechanism based on a Dependency Injection container.
-It is used at runtime by `corda-node`.
+It is used at runtime by `node`.
 
 Relevant dependencies:
 - javax.inject:javax.inject
 - javax.annotation:jsr250-api
-- corda
+- node-api
 
 ### corda-noop-flows-registry
 
 This module provides a no-op flows registry implementation that simply logs new bindings.
-It is used at runtime by `corda-node`.
+It is used at runtime by `node`.
 
 Relevant dependencies:
 - javax.inject:javax.inject
 - javax.annotation:jsr250-api
-- corda
+- node-api
 
 ### cordapp-1
 
 This module defines an initiating flow, `QueryClusterAverageTemperature`, along with a domain model.
 
 Relevant dependencies:
-- corda
+- cordapp-api
 
 ### cordapp-2
 
@@ -85,7 +93,7 @@ Container to inject dependencies inside the flow, and to read properties in a ca
 Relevant dependencies:
 - javax.inject:javax.inject
 - javax.annotation:jsr250-api
-- corda
+- cordapp-api
 - cordapp-1
 
 ### cordapp-2v2
@@ -95,7 +103,7 @@ This module represents a newer version of module `cordapp-2`. It has the same pa
 Relevant dependencies:
 - javax.inject:javax.inject
 - javax.annotation:jsr250-api
-- corda
+- cordapp-api
 - cordapp-1
 
 ### cordapp-3
@@ -106,5 +114,5 @@ Container to inject dependencies inside the flow.
 Relevant dependencies:
 - javax.inject:javax.inject
 - javax.annotation:jsr250-api
-- corda
+- cordapp-api
 - cordapp-1
