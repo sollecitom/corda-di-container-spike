@@ -1,6 +1,6 @@
 package net.corda.cordapp.resolver.di
 
-import net.corda.cordapp.api.Cordapp
+import net.corda.node.api.cordapp.Cordapp
 import net.corda.node.api.cordapp.resolver.CordappsContainer
 import net.corda.cordapp.api.flows.Flows
 import org.springframework.context.annotation.AnnotationConfigApplicationContext

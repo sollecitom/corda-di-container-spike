@@ -58,6 +58,14 @@ Relevant dependencies:
 - javax.inject:javax.inject
 - javax.annotation:jsr250-api
 
+### commons
+
+This module defines types that are common to most modules. Ideally this should be replaced by a collection of domain modules, but for the sake of the exercise a common set works fine.
+
+Relevant dependencies:
+- javax.inject:javax.inject
+- javax.annotation:jsr250-api
+
 ### corda-di-cordapps-resolver
 
 This module provides a Cordapps resolution mechanism based on a Dependency Injection container.

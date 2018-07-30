@@ -2,7 +2,7 @@ package net.corda.node
 
 import net.corda.node.api.cordapp.resolver.CordappsContainer
 import net.corda.node.api.flows.registry.FlowsRegistry
-import net.corda.cordapp.api.logging.loggerFor
+import net.corda.commons.logging.loggerFor
 import javax.annotation.PostConstruct
 import javax.inject.Named
 

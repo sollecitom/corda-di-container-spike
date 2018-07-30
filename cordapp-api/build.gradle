@@ -1,19 +1,6 @@
 group 'net.corda.spikes.di-container-spike'
 version '1.0-SNAPSHOT'
 
-//TODO split this in cordapp-api and corda-commons
-buildscript {
-    ext.konfig_version = '1.6.10.0'
-//    TODO update these versions
-    ext.slf4j_version = '1.7.25'
-    ext.log4j_version = '2.7'
-}
-
 dependencies {
-    compile "com.natpryce:konfig:$konfig_version"
-
-    compile "org.apache.logging.log4j:log4j-core:${log4j_version}"
-    // SLF4J: commons-logging bindings for a SLF4J back end
-    compile "org.slf4j:jcl-over-slf4j:$slf4j_version"
-    compile "org.slf4j:slf4j-api:$slf4j_version"
+    compile project(":commons")
 }

@@ -1,7 +1,7 @@
 package net.corda.node
 
 import com.natpryce.konfig.Key
-import net.corda.cordapp.api.utils.Properties
+import net.corda.commons.utils.Properties
 import javax.inject.Named
 
 private const val NETWORK_HOST = "config.node.network.host"

@@ -1,7 +1,7 @@
 package net.corda.cordapp.api.flows.registry
 
+import net.corda.commons.logging.loggerFor
 import net.corda.cordapp.api.flows.Flows
-import net.corda.cordapp.api.logging.loggerFor
 import javax.inject.Named
 import kotlin.reflect.KClass
 

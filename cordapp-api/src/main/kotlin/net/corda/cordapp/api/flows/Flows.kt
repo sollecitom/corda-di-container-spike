@@ -1,6 +1,6 @@
 package net.corda.cordapp.api.flows
 
-import net.corda.cordapp.api.network.Party
+import net.corda.commons.network.Party
 import kotlin.reflect.KClass
 
 object Flows {

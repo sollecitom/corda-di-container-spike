@@ -1,4 +1,4 @@
-package net.corda.cordapp.api.network
+package net.corda.commons.network
 
 data class CordaX500Name(val commonName: String?, val organisationUnit: String?, val organisation: String, val locality: String, val state: String?, val country: String) {
 

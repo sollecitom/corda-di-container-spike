@@ -1,4 +1,4 @@
-package net.corda.cordapp.api.logging
+package net.corda.commons.logging
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

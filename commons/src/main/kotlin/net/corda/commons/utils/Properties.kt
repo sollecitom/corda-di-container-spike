@@ -1,4 +1,4 @@
-package net.corda.cordapp.api.utils
+package net.corda.commons.utils
 
 import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.ConfigurationProperties

@@ -5,7 +5,7 @@ import examples.cordapps.one.flows.QueryClusterAverageTemperature
 import examples.cordapps.two.domain.Sensor
 import net.corda.cordapp.api.flows.Flows
 import net.corda.cordapp.api.flows.Suspendable
-import net.corda.cordapp.api.logging.loggerFor
+import net.corda.commons.logging.loggerFor
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Named

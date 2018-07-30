@@ -3,6 +3,7 @@ rootProject.name = 'parent'
 include 'node'
 include 'node-api'
 include 'cordapp-api'
+include 'commons'
 
 // Adapters
 include ':corda-di-cordapps-resolver'

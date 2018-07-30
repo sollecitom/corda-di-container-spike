@@ -9,6 +9,7 @@ dependencies {
     runtime project(":corda-di-cordapps-resolver")
     runtime project(":corda-noop-flows-registry")
 
+    compile project(":commons")
     compile project(":node-api")
     compile project(":cordapp-api")
 }

@@ -1,6 +1,6 @@
 package net.corda.node.api.cordapp.resolver
 
-import net.corda.cordapp.api.Cordapp
+import net.corda.node.api.cordapp.Cordapp
 
 interface CordappsContainer {
 
