@@ -4,6 +4,7 @@ import net.corda.cordapp.api.flows.Flows
 import kotlin.reflect.KClass
 
 // This is just to keep a similarity with the current structure in Corda. Ideally, Cordapps should process flows themselves.
+// TODO add Cordapp version to the map
 interface FlowsRegistry {
 
     fun <INITIATING : Flows.Initiating<*>> register(initiating: KClass<out INITIATING>, initiated: Flows.Initiated)

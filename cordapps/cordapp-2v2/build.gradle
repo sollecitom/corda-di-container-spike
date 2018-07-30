@@ -4,7 +4,7 @@ version '2.0-SNAPSHOT'
 dependencies {
     compile project(":cordapp-1")
 
-    compile project(":cordapp-api")
+    compileOnly project(":cordapp-api")
 }
 
 task fatJar(type: Jar) {
@@ -16,7 +16,7 @@ task fatJar(type: Jar) {
         )
     }
     baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { (configurations.compile - configurations.compileOnly).collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 

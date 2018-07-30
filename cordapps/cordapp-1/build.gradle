@@ -2,10 +2,9 @@ group 'net.corda.spikes.di-container-spike'
 version '1.0-SNAPSHOT'
 
 dependencies {
-    compile project(":cordapp-api")
+    compileOnly project(":cordapp-api")
 }
 
-// TODO try and use a normal JAR rather than a fat one, for all Cordapps
 task fatJar(type: Jar) {
     manifest {
         attributes(
@@ -15,12 +14,12 @@ task fatJar(type: Jar) {
         )
     }
     baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { (configurations.compile - configurations.compileOnly).collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
-// TODO try and make it shared across Cordapps
 fatJar.doLast {
+    // TODO try and define this at parent level for all Cordapps
     def nodeCordappsPath = "${project.parent.rootDir.path}" + File.separator + "node" + File.separator + "cordapps"
     copy {
         from fatJar.archivePath
