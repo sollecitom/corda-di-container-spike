@@ -24,9 +24,9 @@ internal class ReturnTemperature @Inject constructor(private val sensor: Sensor<
     }
 
     @Suspendable
-    override fun call(session: Flows.Session, serviceHub: Flows.ServiceHub) {
+    override fun call(initiatingSession: Flows.Session) {
 
-        session.send(sensor.read())
+        initiatingSession.send(sensor.read())
     }
 
     override val initiatedBy = setOf(QueryClusterAverageTemperature::class)

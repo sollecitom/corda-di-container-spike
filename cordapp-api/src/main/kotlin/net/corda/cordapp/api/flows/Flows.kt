@@ -7,12 +7,12 @@ object Flows {
 
     interface Initiating<out RESULT : Any> {
 
-        fun call(serviceHub: ServiceHub): RESULT
+        fun call(sessionManager: Flows.SessionManager): RESULT
     }
 
     interface Initiated {
 
-        fun call(session: Session, serviceHub: ServiceHub)
+        fun call(initiatingSession: Session)
 
         val initiatedBy: Set<KClass<out Initiating<*>>>
     }
@@ -24,7 +24,7 @@ object Flows {
         fun <MESSAGE : Any> receive(messageType: KClass<MESSAGE>): MESSAGE
     }
 
-    interface ServiceHub {
+    interface SessionManager {
 
         fun initiateSession(party: Party): Session
     }

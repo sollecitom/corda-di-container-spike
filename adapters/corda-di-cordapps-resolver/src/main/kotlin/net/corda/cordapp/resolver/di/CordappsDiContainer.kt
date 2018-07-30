@@ -16,6 +16,8 @@ internal class CordappsDiContainer : CordappsContainer {
 
     companion object {
         const val ROOT_PACKAGE_SEPARATOR = ";"
+
+        private const val CORDAPP_SERVICES_PACKAGE = "net.corda.node.services"
     }
 
     override fun cordapps(): Set<Cordapp> {
@@ -35,7 +37,7 @@ internal class CordappsDiContainer : CordappsContainer {
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            CordaAppImpl(cordappName, cordappVersion, jarFile, rootPackages, this.javaClass.classLoader)
+            CordaAppImpl(cordappName, cordappVersion, jarFile, rootPackages + CORDAPP_SERVICES_PACKAGE, this.javaClass.classLoader)
         }
     }
 

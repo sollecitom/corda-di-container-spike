@@ -10,9 +10,8 @@ import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Named
 
-// TODO show how ServiceHub could be injected instead
 @Named
-internal class ReturnTemperature @Inject constructor(private val sensor: Sensor<Temperature>) : Flows.Initiated {
+internal class ReturnTemperature @Inject constructor(private val sensor: Sensor<Temperature>, private val sessionManager: Flows.SessionManager) : Flows.Initiated {
 
     companion object {
         private val logger = loggerFor<ReturnTemperature>()
@@ -25,9 +24,9 @@ internal class ReturnTemperature @Inject constructor(private val sensor: Sensor<
     }
 
     @Suspendable
-    override fun call(session: Flows.Session, serviceHub: Flows.ServiceHub) {
+    override fun call(initiatingSession: Flows.Session) {
 
-        session.send(sensor.read())
+        initiatingSession.send(sensor.read())
     }
 
     override val initiatedBy = setOf(QueryClusterAverageTemperature::class)

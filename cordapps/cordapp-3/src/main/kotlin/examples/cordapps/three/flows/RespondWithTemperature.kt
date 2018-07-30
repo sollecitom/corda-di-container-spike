@@ -12,9 +12,9 @@ private const val VALUE = 10.0
 internal class RespondWithTemperature : Flows.Initiated {
 
     @Suspendable
-    override fun call(session: Flows.Session, serviceHub: Flows.ServiceHub) {
+    override fun call(initiatingSession: Flows.Session) {
 
-        session.send(Temperature(VALUE))
+        initiatingSession.send(Temperature(VALUE))
     }
 
     override val initiatedBy = setOf(QueryClusterAverageTemperature::class)

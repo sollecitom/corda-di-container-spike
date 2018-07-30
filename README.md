@@ -11,6 +11,7 @@ A Dependency Injection container (Spring Boot) is used to:
 - Find and inject types from a module's dependencies.
 - Find and inject types from JARs in a specified, thus enabling a plugin-based architecture.
 - Find and inject types within a Cordapp module (thus allowing initiated flows to be passed customer defined types through the constructor).
+- Make instances of interfaces implemented in Corda available to initiated flows defined in Cordapps (this means the API will never break because of added functionality, without the need to bundle things together).
 
 ## Notes and remarks
 

@@ -9,10 +9,10 @@ import net.corda.commons.network.Party
 class QueryClusterAverageTemperature(private val parties: Set<Party>) : Flows.Initiating<Temperature> {
 
     @Suspendable
-    override fun call(serviceHub: Flows.ServiceHub): Temperature {
+    override fun call(sessionManager: Flows.SessionManager): Temperature {
 
         val total = parties.fold(Temperature(0.0)) { total, it ->
-            val session = serviceHub.initiateSession(it)
+            val session = sessionManager.initiateSession(it)
             val temperature = session.receive<Temperature>()
             total + temperature
         }
