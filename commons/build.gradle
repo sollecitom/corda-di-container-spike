@@ -4,6 +4,8 @@ buildscript {
 
     ext.slf4j_version = '1.7.25'
     ext.log4j_version = '2.11.1'
+
+    ext.reactor_version = '3.1.8.RELEASE'
 }
 
 dependencies {
@@ -13,4 +15,6 @@ dependencies {
     // SLF4J: commons-logging bindings for a SLF4J back end
     compile "org.slf4j:jcl-over-slf4j:$slf4j_version"
     compile "org.slf4j:slf4j-api:$slf4j_version"
+
+    compile "io.projectreactor:reactor-core:$reactor_version"
 }

@@ -1,14 +1,16 @@
 package net.corda.node
 
+import net.corda.commons.events.PublishEvent
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.cordapp.resolver.CordappsContainer
+import net.corda.node.api.events.NodeEvents
 import net.corda.node.api.flows.processing.registry.FlowsProcessorRegistry
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class Node @Inject internal constructor(private val cordappsContainer: CordappsContainer, private val flowsProcessorRegistry: FlowsProcessorRegistry, private val configuration: Configuration) {
+internal class Node @Inject internal constructor(private val cordappsContainer: CordappsContainer, private val flowsProcessorRegistry: FlowsProcessorRegistry, private val configuration: Configuration, private val publishEvent: PublishEvent) {
 
     companion object {
         private val logger = loggerFor<Node>()
@@ -29,7 +31,7 @@ internal class Node @Inject internal constructor(private val cordappsContainer: 
             flowsProcessorRegistry.register(cordapp)
         }
 
-        // TODO maybe show a lookup for flow processors, publish initialization complete event here, and call "process" from another bean in the subscription for that event.
+        publishEvent(NodeEvents.Initialisation.Completed())
     }
 
     interface Configuration {
