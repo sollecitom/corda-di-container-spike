@@ -1,7 +1,3 @@
-// TODO try and remove this from all sub-projects
-group 'net.corda.spikes.di-container-spike'
-version '1.0-SNAPSHOT'
-
 dependencies {
     compileOnly project(":node-api")
 }
@@ -10,9 +6,9 @@ jar {
     manifest {
         attributes(
                 "Specification-Title": "net.corda.node.api.flows.registry.FlowsRegistry",
-                "Specification-Version": version,
+                "Specification-Version": project.parent.version,
                 "Implementation-Title": "net.corda.cordapp.api.flows.registry.NoOpFlowsRegistry",
-                "Implementation-Version": version
+                "Implementation-Version": project.parent.version
         )
     }
     baseName = project.name

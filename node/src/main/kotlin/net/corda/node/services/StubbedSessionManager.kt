@@ -9,6 +9,6 @@ class StubbedSessionManager : Flows.SessionManager {
 
     override fun initiateSession(party: Party): Flows.Session {
 
-        TODO("not implemented")
+        throw NotImplementedError("Nothing interesting here!")
     }
 }
