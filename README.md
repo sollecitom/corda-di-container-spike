@@ -52,7 +52,7 @@ This module defines types that are common to most modules. Ideally this should b
 This module provides a Cordapps resolution mechanism based on a Dependency Injection container.
 It is used at runtime by `node`.
 
-### corda-noop-flows-registry
+### in-memory-flows-registry
 
 This module provides a no-op flows registry implementation that simply logs new bindings.
 It produces a JAR plugin that `node` can use.

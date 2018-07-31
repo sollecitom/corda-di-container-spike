@@ -9,8 +9,8 @@ include 'commons'
 include ':corda-di-cordapps-resolver'
 project(':corda-di-cordapps-resolver').projectDir = new File('./adapters/corda-di-cordapps-resolver')
 
-include ':corda-noop-flows-registry'
-project(':corda-noop-flows-registry').projectDir = new File('./adapters/corda-noop-flows-registry')
+include ':in-memory-flows-registry'
+project(':in-memory-flows-registry').projectDir = new File('./adapters/in-memory-flows-registry')
 
 // Cordapps
 include ':cordapp-1'

@@ -1,11 +1,11 @@
 package net.corda.node.api.cordapp
 
-import net.corda.cordapp.api.flows.Flows
-
 interface Cordapp {
 
     val name: String
     val version: Int
 
-    val initiatedFlows: Set<Flows.Initiated>
+    fun isInitiatedBy(initiatingFlowName: String): Boolean
+
+    val allFlowsInitiating: Set<String>
 }

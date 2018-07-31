@@ -18,39 +18,39 @@ internal class CordappsDiContainer : CordappsContainer {
         const val ROOT_PACKAGE_SEPARATOR = ";"
 
         private val CORDAPP_AUGMENTING_PACKAGES = arrayOf("net.corda.node.services")
+
+        private val cordappsDirectory = File("node/cordapps")
     }
 
     override fun cordapps(): Set<Cordapp> {
 
-        val libs = File("node/cordapps")
         // TODO use a watcher to pick up events
-        val cordapps = libs.walkTopDown().filter(this::isJar).map(this::toCordapp).toList()
-        val distinct = cordapps.toSet()
+        val cordapps = cordappsDirectory.walkTopDown().filter(this::isJar).map(this::toCordapp).toList()
+        val distinct = cordapps.toSortedSet(Comparator.comparing(Cordapp::name).thenComparing(Cordapp::version))
         require(distinct.size == cordapps.size) { "Cordapps are not distinct. Found $cordapps." }
         return distinct
     }
 
-    private fun toCordapp(jarFile: File): CordaAppImpl {
+    private fun toCordapp(jarFile: File): CordappImpl {
 
         return JarInputStream(jarFile.inputStream()).use { jar ->
 
             val manifest = jar.manifest
             val cordappName = manifest["Implementation-Title"]
             val cordappVersion = manifest["Implementation-Version"]?.toInt()
-            val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet()
-                    ?: throw IllegalArgumentException("Cordapps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapp.one;com.apache.commons'!")
+            val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet() ?: throw IllegalArgumentException("Cordapps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapp.one;com.apache.commons'!")
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            CordaAppImpl(cordappName, cordappVersion, jarFile, rootPackages + CORDAPP_AUGMENTING_PACKAGES, this.javaClass.classLoader)
+            CordappImpl(cordappName, cordappVersion, jarFile, rootPackages + CORDAPP_AUGMENTING_PACKAGES, this.javaClass.classLoader)
         }
     }
 
-    private class CordaAppImpl(override val name: String, override val version: Int, private val jarFile: File, private val rootPackages: Set<String>, parentClassLoader: ClassLoader) : Cordapp {
+    private class CordappImpl(override val name: String, override val version: Int, private val jarFile: File, private val rootPackages: Set<String>, parentClassLoader: ClassLoader) : Cordapp {
 
         private val classLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()), parentClassLoader)
 
-        override val initiatedFlows: Set<Flows.Initiated> by lazy {
+        private val initiatedFlows: Set<Flows.Initiated> by lazy {
 
             // Here we have a classLoader per Cordapp per version, along with a separate ApplicationContext.
             val context = AnnotationConfigApplicationContext()
@@ -59,6 +59,17 @@ internal class CordappsDiContainer : CordappsContainer {
             context.refresh()
             context.getBeansOfType(Flows.Initiated::class.java).values.toSet()
         }
+
+        override fun isInitiatedBy(initiatingFlowName: String): Boolean {
+
+            return flowsInitiatedBy(initiatingFlowName).isNotEmpty()
+        }
+
+        override val allFlowsInitiating: Set<String> by lazy {
+            initiatedFlows.flatMap(Flows.Initiated::initiatedBy).map { it.java.name }.toSortedSet()
+        }
+
+        private fun flowsInitiatedBy(initiatingFlowName: String): Set<Flows.Initiated> = initiatedFlows.filter { it.initiatedBy.any { it.qualifiedName == initiatingFlowName } }.toSet()
 
         override fun equals(other: Any?): Boolean {
 
@@ -69,7 +80,7 @@ internal class CordappsDiContainer : CordappsContainer {
                 return false
             }
 
-            other as CordaAppImpl
+            other as CordappImpl
 
             if (name != other.name) {
                 return false
