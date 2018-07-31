@@ -21,9 +21,11 @@ internal class RpcServerStub @Inject internal constructor(private val flowsProce
     @PostConstruct
     internal fun initialize() {
 
-        events.stream
-                .filterIsInstance<NodeEvents.Initialisation.Completed>()
-                .doOnNext { _ -> flowsProcessorRegistry.processorsForFlow(queryTemperatureFlowFQN).forEach { processor -> logger.info("Flow '$queryTemperatureFlowFQN' is supported by '${processor.id}' version '${processor.version}'.") } }
-                .subscribe()
+        events.stream.filterIsInstance<NodeEvents.Initialisation.Completed>().doOnNext { _ -> logProcessorsForQueryTemperatureFlow() }.subscribe()
+    }
+
+    private fun logProcessorsForQueryTemperatureFlow() {
+
+        logger.info("Flow '${RpcServerStub.queryTemperatureFlowFQN}' is supported by ${flowsProcessorRegistry.processorsForFlow(queryTemperatureFlowFQN).joinToString(", ", "[", "]") { processor -> "'${processor.id}' version '${processor.version}'" }}.")
     }
 }

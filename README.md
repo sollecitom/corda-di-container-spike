@@ -13,6 +13,10 @@ A Dependency Injection container (Spring Boot) is used to:
 - Find and inject types within a Cordapp module (thus allowing initiated flows to be passed customer defined types through the constructor).
 - Make instances of interfaces implemented in Corda available to initiated flows defined in Cordapps (this means the API will never break because of added functionality, without the need to bundle things together).
 
+An events framework, based on Project Reactor, is used to:
+
+- Allow decoupled reactive behaviour across modules. 
+
 ## Notes and remarks
 
 With regards to what stated above, some remarks:
