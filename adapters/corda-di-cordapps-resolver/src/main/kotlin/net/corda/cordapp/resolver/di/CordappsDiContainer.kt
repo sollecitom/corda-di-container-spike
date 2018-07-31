@@ -24,10 +24,13 @@ internal class CordappsDiContainer : CordappsContainer {
 
         val libs = File("node/cordapps")
         // TODO use a watcher to pick up events
-        return libs.walkTopDown().filter(this::isJar).map(this::toCordapp).toSet()
+        val cordapps = libs.walkTopDown().filter(this::isJar).map(this::toCordapp).toList()
+        val distinct = cordapps.toSet()
+        require(distinct.size == cordapps.size) { "Cordapps are not distinct. Found $cordapps." }
+        return distinct
     }
 
-    private fun toCordapp(jarFile: File): Cordapp {
+    private fun toCordapp(jarFile: File): CordaAppImpl {
 
         return JarInputStream(jarFile.inputStream()).use { jar ->
 
@@ -43,7 +46,7 @@ internal class CordappsDiContainer : CordappsContainer {
         }
     }
 
-    private data class CordaAppImpl(override val name: String, override val version: Int, private val jarFile: File, private val rootPackages: Set<String>, private val parentClassLoader: ClassLoader) : Cordapp {
+    private class CordaAppImpl(override val name: String, override val version: Int, private val jarFile: File, private val rootPackages: Set<String>, parentClassLoader: ClassLoader) : Cordapp {
 
         private val classLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()), parentClassLoader)
 
@@ -56,6 +59,41 @@ internal class CordappsDiContainer : CordappsContainer {
             context.refresh()
             context.getBeansOfType(Flows.Initiated::class.java).values.toSet()
         }
+
+        override fun equals(other: Any?): Boolean {
+
+            if (this === other) {
+                return true
+            }
+            if (javaClass != other?.javaClass) {
+                return false
+            }
+
+            other as CordaAppImpl
+
+            if (name != other.name) {
+                return false
+            }
+            if (version != other.version) {
+                return false
+            }
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+
+            var result = name.hashCode()
+            result = 31 * result + version
+            return result
+        }
+
+        override fun toString(): String {
+
+            return "{name='$name', version=$version, jarFile='${jarFile.toPath().toAbsolutePath()}'}"
+        }
+
+
     }
 
     private fun isJar(file: File) = !file.isDirectory && file.extension == "jar"
