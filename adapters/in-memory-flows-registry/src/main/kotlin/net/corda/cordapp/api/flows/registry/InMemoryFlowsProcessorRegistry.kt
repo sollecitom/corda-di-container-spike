@@ -2,8 +2,8 @@ package net.corda.cordapp.api.flows.registry
 
 import net.corda.commons.di.Plugin
 import net.corda.commons.logging.loggerFor
-import net.corda.node.api.cordapp.Cordapp
-import net.corda.node.api.flows.registry.FlowsProcessorRegistry
+import net.corda.node.api.flows.processing.FlowProcessor
+import net.corda.node.api.flows.processing.registry.FlowsProcessorRegistry
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import javax.annotation.PostConstruct
@@ -14,8 +14,7 @@ import javax.inject.Named
 @Named
 class InMemoryFlowsProcessorRegistry @Inject constructor(private val logNewBinding: LogNewBinding) : FlowsProcessorRegistry {
 
-    // TODO use the FlowProcessor interface here
-    private val processorsByFlow: ConcurrentMap<String, MutableSet<Cordapp>> = ConcurrentHashMap()
+    private val processorsByFlow: ConcurrentMap<String, MutableSet<FlowProcessor>> = ConcurrentHashMap()
 
     private companion object {
 
@@ -29,22 +28,20 @@ class InMemoryFlowsProcessorRegistry @Inject constructor(private val logNewBindi
         logger.info("Initializing InMemoryFlowsProcessorRegistry")
     }
 
-    // TODO use the FlowProcessor interface here
-    override fun register(cordapp: Cordapp) {
+    override fun register(processor: FlowProcessor) {
 
-        cordapp.allFlowsInitiating.forEach { flow ->
+        processor.supportedFlowNames.forEach { flow ->
 
             val processors = processorsByFlow.computeIfAbsent(flow) { _ -> mutableSetOf() }
-            processors += cordapp
-            logNewBinding.apply(flow, cordapp, processors)
+            processors += processor
+            logNewBinding.apply(flow, processor, processors)
         }
     }
 
-    override fun processorsForFlow(initiatingFlowName: String): Set<Cordapp> = processorsByFlow.getOrDefault(initiatingFlowName, emptySet<Cordapp>()).toSet()
+    override fun processorsForFlow(initiatingFlowName: String): Set<FlowProcessor> = processorsByFlow.getOrDefault(initiatingFlowName, emptySet<FlowProcessor>()).toSet()
 
     interface LogNewBinding {
 
-        // TODO use the FlowProcessor interface here
-        fun apply(initiating: String, processor: Cordapp, allInitiatedFlows: Set<Cordapp>)
+        fun apply(initiating: String, processor: FlowProcessor, allInitiatedFlows: Set<FlowProcessor>)
     }
 }

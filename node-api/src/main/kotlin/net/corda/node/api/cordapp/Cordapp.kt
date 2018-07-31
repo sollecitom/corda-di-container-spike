@@ -1,11 +1,10 @@
 package net.corda.node.api.cordapp
 
-interface Cordapp {
+import net.corda.node.api.flows.processing.FlowProcessor
+
+interface Cordapp : FlowProcessor {
 
     val name: String
-    val version: Int
 
-    fun isInitiatedBy(initiatingFlowName: String): Boolean
-
-    val allFlowsInitiating: Set<String>
+    override val id get() = name
 }

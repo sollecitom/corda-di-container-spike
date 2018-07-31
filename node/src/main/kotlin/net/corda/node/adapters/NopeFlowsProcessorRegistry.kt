@@ -2,8 +2,8 @@ package net.corda.node.adapters
 
 import net.corda.commons.di.DefaultBehaviour
 import net.corda.commons.logging.loggerFor
-import net.corda.node.api.cordapp.Cordapp
-import net.corda.node.api.flows.registry.FlowsProcessorRegistry
+import net.corda.node.api.flows.processing.FlowProcessor
+import net.corda.node.api.flows.processing.registry.FlowsProcessorRegistry
 import javax.annotation.PostConstruct
 import javax.inject.Named
 
@@ -23,12 +23,12 @@ class NopeFlowsProcessorRegistry : FlowsProcessorRegistry {
         logger.info("Initializing NopeFlowsProcessorRegistry")
     }
 
-    override fun register(cordapp: Cordapp) {
+    override fun register(processor: FlowProcessor) {
 
         logger.info("Nope, no registration!")
     }
 
-    override fun processorsForFlow(initiatingFlowName: String): Set<Cordapp> {
+    override fun processorsForFlow(initiatingFlowName: String): Set<FlowProcessor> {
 
         logger.info("Nope, no looking up processors for flows!")
         return emptySet()

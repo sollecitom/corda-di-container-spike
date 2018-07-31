@@ -1,5 +1,6 @@
 package net.corda.cordapp.resolver.di
 
+import net.corda.commons.logging.loggerFor
 import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
 import net.corda.node.api.cordapp.resolver.CordappsContainer
@@ -38,7 +39,8 @@ internal class CordappsDiContainer : CordappsContainer {
             val manifest = jar.manifest
             val cordappName = manifest["Implementation-Title"]
             val cordappVersion = manifest["Implementation-Version"]?.toInt()
-            val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet() ?: throw IllegalArgumentException("Cordapps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapp.one;com.apache.commons'!")
+            val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet()
+                    ?: throw IllegalArgumentException("Cordapps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapp.one;com.apache.commons'!")
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
@@ -47,6 +49,11 @@ internal class CordappsDiContainer : CordappsContainer {
     }
 
     private class CordappImpl(override val name: String, override val version: Int, private val jarFile: File, private val rootPackages: Set<String>, parentClassLoader: ClassLoader) : Cordapp {
+
+        private companion object {
+
+            private val logger = loggerFor<CordappImpl>()
+        }
 
         private val classLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()), parentClassLoader)
 
@@ -65,8 +72,13 @@ internal class CordappsDiContainer : CordappsContainer {
             return flowsInitiatedBy(initiatingFlowName).isNotEmpty()
         }
 
-        override val allFlowsInitiating: Set<String> by lazy {
+        override val supportedFlowNames: Set<String> by lazy {
             initiatedFlows.flatMap(Flows.Initiated::initiatedBy).map { it.java.name }.toSortedSet()
+        }
+
+        override fun process(flowName: String, payload: ByteArray) {
+
+            logger.info("Cordapp '$name' version '$version' is processing flow '$flowName'.")
         }
 
         private fun flowsInitiatedBy(initiatingFlowName: String): Set<Flows.Initiated> = initiatedFlows.filter { it.initiatedBy.any { it.qualifiedName == initiatingFlowName } }.toSet()

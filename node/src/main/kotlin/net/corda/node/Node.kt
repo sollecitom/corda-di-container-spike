@@ -2,7 +2,7 @@ package net.corda.node
 
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.cordapp.resolver.CordappsContainer
-import net.corda.node.api.flows.registry.FlowsProcessorRegistry
+import net.corda.node.api.flows.processing.registry.FlowsProcessorRegistry
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Named
@@ -25,7 +25,7 @@ internal class Node @Inject internal constructor(private val cordappsContainer: 
         val cordapps = cordappsContainer.cordapps()
         cordapps.forEach { cordapp ->
 
-            logger.info("Registering Cordapp ${cordapp.name} with version ${cordapp.version}, listening for flows ${cordapp.allFlowsInitiating.joinToString(", ", "[", "]")}.")
+            logger.info("Registering Cordapp ${cordapp.name} with version ${cordapp.version}, listening for flows ${cordapp.supportedFlowNames.joinToString(", ", "[", "]")}.")
             flowsProcessorRegistry.register(cordapp)
         }
 

@@ -5,7 +5,7 @@ dependencies {
 jar {
     manifest {
         attributes(
-                "Specification-Title": "net.corda.node.api.flows.registry.FlowsRegistry",
+                "Specification-Title": "net.corda.node.api.flows.processing.registry.FlowsRegistry",
                 "Specification-Version": project.parent.version,
                 "Implementation-Title": "net.corda.cordapp.api.flows.registry.NoOpFlowsRegistry",
                 "Implementation-Version": project.parent.version
