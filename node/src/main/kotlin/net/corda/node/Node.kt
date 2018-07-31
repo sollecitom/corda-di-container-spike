@@ -1,13 +1,14 @@
 package net.corda.node
 
+import net.corda.commons.logging.loggerFor
 import net.corda.node.api.cordapp.resolver.CordappsContainer
 import net.corda.node.api.flows.registry.FlowsRegistry
-import net.corda.commons.logging.loggerFor
 import javax.annotation.PostConstruct
+import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class Node(private val cordappsContainer: CordappsContainer, private val flowsRegistry: FlowsRegistry, private val configuration: Configuration) {
+internal class Node @Inject internal constructor(private val cordappsContainer: CordappsContainer, private val flowsRegistry: FlowsRegistry, private val configuration: Configuration) {
 
     companion object {
         private val logger = loggerFor<Node>()

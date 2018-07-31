@@ -8,7 +8,8 @@ import kotlin.reflect.KClass
 @Named
 internal class ConsoleNewBindingLogger : LogNewBinding {
 
-    companion object {
+    private companion object {
+
         private val logger = loggerFor<ConsoleNewBindingLogger>()
     }
 
