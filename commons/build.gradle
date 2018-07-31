@@ -1,9 +1,9 @@
 // This should be a collection of domain modules, but for the sake of the example a common one is fine.
 buildscript {
     ext.konfig_version = '1.6.10.0'
-//    TODO update these versions
+
     ext.slf4j_version = '1.7.25'
-    ext.log4j_version = '2.7'
+    ext.log4j_version = '2.11.1'
 }
 
 dependencies {
