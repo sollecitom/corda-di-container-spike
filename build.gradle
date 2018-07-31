@@ -73,6 +73,9 @@ allprojects {
     }
 }
 
+ext.nodeCordappsPath = "${project.rootDir.path}" + File.separator + "node" + File.separator + "cordapps"
+ext.nodePluginsPath = "${project.rootDir.path}" + File.separator + "node" + File.separator + "plugins"
+
 subprojects { it ->
 
     idea {

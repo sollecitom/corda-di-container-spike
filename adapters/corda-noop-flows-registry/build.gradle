@@ -15,10 +15,9 @@ jar {
 }
 
 jar.doLast {
-    def nodePluginsPath = "${project.parent.rootDir.path}" + File.separator + "node" + File.separator + "plugins"
     copy {
         from jar.archivePath
-        into nodePluginsPath
+        into project.parent.nodePluginsPath
     }
 }
 

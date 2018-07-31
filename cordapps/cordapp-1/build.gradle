@@ -16,11 +16,9 @@ task fatJar(type: Jar) {
 }
 
 fatJar.doLast {
-    // TODO try and define this at parent level for all Cordapps
-    def nodeCordappsPath = "${project.parent.rootDir.path}" + File.separator + "node" + File.separator + "cordapps"
     copy {
         from fatJar.archivePath
-        into nodeCordappsPath
+        into project.parent.nodeCordappsPath
     }
 }
 
