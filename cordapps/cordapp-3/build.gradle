@@ -20,7 +20,7 @@ task fatJar(type: Jar) {
 fatJar.doLast {
     copy {
         from fatJar.archivePath
-        into project.parent.nodeCordappsPath
+        into project.parent.nodeCordappsDirectory
     }
 }
 

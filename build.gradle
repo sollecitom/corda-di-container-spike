@@ -73,8 +73,8 @@ allprojects {
     }
 }
 
-ext.nodeCordappsPath = "${project.rootDir.path}" + File.separator + "node" + File.separator + "cordapps"
-ext.nodePluginsPath = "${project.rootDir.path}" + File.separator + "node" + File.separator + "plugins"
+ext.nodeCordappsDirectory = "${project.rootDir.path}" + File.separator + "node" + File.separator + "cordapps"
+ext.nodePluginsDirectory = "${project.rootDir.path}" + File.separator + "node" + File.separator + "plugins"
 
 subprojects { it ->
 
@@ -97,15 +97,12 @@ subprojects { it ->
     }
 }
 
-def nodeCordappsPath = "${project.rootDir.path}" + File.separator + "node" + File.separator + "cordapps"
-def nodePluginsPath = "${project.rootDir.path}" + File.separator + "node" + File.separator + "plugins"
-
 clean.doFirst {
-    file(nodePluginsPath).deleteDir()
-    file(nodeCordappsPath).deleteDir()
+    file(nodePluginsDirectory).deleteDir()
+    file(nodeCordappsDirectory).deleteDir()
 }
 
 clean.doLast {
-    file(nodePluginsPath).mkdirs()
-    file(nodeCordappsPath).mkdirs()
+    file(nodePluginsDirectory).mkdirs()
+    file(nodeCordappsDirectory).mkdirs()
 }

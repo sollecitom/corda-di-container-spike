@@ -17,7 +17,7 @@ jar {
 jar.doLast {
     copy {
         from jar.archivePath
-        into project.parent.nodePluginsPath
+        into project.parent.nodePluginsDirectory
     }
 }
 
