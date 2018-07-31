@@ -24,9 +24,10 @@ With regards to what stated above, some remarks:
 ## How to run it
 
 - Run `./gradlew clean build -x test` from within the project directory.
-- Refresh the Gradle project (Intellij is annoying when it comes to adding a directory to the classpath, so Gradle does it at refresh time, rather than dynamically).
 - Run/Debug `NodeStarter.kt` and watch the console. Then open `Node` and follow the code.
 - (After changes to plugins or Cordapps) start again from point 1.
+
+**Each time the Gradle settings change, Intellij will refresh the project if set on auto-import. The "plugins" and "cordapps" folders can be empty or incomplete at that time, so the first time or anytime after you changed the Gradle setup, refresh the Gradle project after a clean build.**
 
 ## Project modules structure
 
