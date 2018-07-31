@@ -29,7 +29,7 @@ internal class Node @Inject internal constructor(private val cordappsContainer: 
             flowsProcessorRegistry.register(cordapp)
         }
 
-        // TODO maybe show a lookup for flow processors
+        // TODO maybe show a lookup for flow processors, publish initialization complete event here, and call "process" from another bean in the subscription for that event.
     }
 
     interface Configuration {
