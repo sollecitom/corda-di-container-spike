@@ -1,4 +1,4 @@
-// TODO this should be a collection of domain modules, but for the sake of the example a common one is fine.
+// This should be a collection of domain modules, but for the sake of the example a common one is fine.
 buildscript {
     ext.konfig_version = '1.6.10.0'
 //    TODO update these versions
