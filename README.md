@@ -15,7 +15,8 @@ A Dependency Injection container (Spring Boot) is used to:
 
 An events framework, based on Project Reactor, is used to:
 
-- Allow decoupled reactive behaviour across modules. 
+- Allow decoupled reactive behaviour across modules.
+- Showcase a stubbed auditing service filtering all application events based on an inclusion list, with customized behaviour for each event type of interest.
 
 ## Notes and remarks
 
