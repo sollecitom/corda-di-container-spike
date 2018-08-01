@@ -3,7 +3,7 @@ package net.corda.cordapp.api.flows.registry
 import net.corda.commons.di.Plugin
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.flows.processing.FlowProcessor
-import net.corda.node.api.flows.processing.registry.FlowsProcessorRegistry
+import net.corda.node.api.flows.processing.FlowProcessors
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import javax.annotation.PostConstruct
@@ -12,7 +12,7 @@ import javax.inject.Named
 
 @Plugin
 @Named
-class InMemoryFlowsProcessorRegistry @Inject constructor(private val logNewBinding: LogNewBinding) : FlowsProcessorRegistry {
+class InMemoryFlowsProcessorRegistry @Inject constructor(private val logNewBinding: LogNewBinding) : FlowProcessors.Registry, FlowProcessors.Repository {
 
     private val processorsByFlow: ConcurrentMap<String, MutableSet<FlowProcessor>> = ConcurrentHashMap()
 
@@ -38,7 +38,7 @@ class InMemoryFlowsProcessorRegistry @Inject constructor(private val logNewBindi
         }
     }
 
-    override fun processorsForFlow(initiatingFlowName: String): Set<FlowProcessor> = processorsByFlow.getOrDefault(initiatingFlowName, emptySet<FlowProcessor>()).toSet()
+    override fun forFlow(initiatingFlowName: String): Set<FlowProcessor> = processorsByFlow.getOrDefault(initiatingFlowName, emptySet<FlowProcessor>()).toSet()
 
     interface LogNewBinding {
 

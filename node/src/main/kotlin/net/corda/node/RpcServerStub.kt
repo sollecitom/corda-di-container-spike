@@ -4,13 +4,13 @@ import net.corda.commons.events.EventSource
 import net.corda.commons.events.filterIsInstance
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.events.NodeEvents
-import net.corda.node.api.flows.processing.registry.FlowsProcessorRegistry
+import net.corda.node.api.flows.processing.FlowProcessors
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class RpcServerStub @Inject internal constructor(private val flowsProcessorRegistry: FlowsProcessorRegistry, private val events: EventSource) {
+internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, private val events: EventSource) {
 
     private companion object {
 
@@ -26,6 +26,6 @@ internal class RpcServerStub @Inject internal constructor(private val flowsProce
 
     private fun logProcessorsForQueryTemperatureFlow() {
 
-        logger.info("Flow '${RpcServerStub.queryTemperatureFlowFQN}' is supported by ${flowsProcessorRegistry.processorsForFlow(queryTemperatureFlowFQN).joinToString(", ", "[", "]") { processor -> "'${processor.id}' version '${processor.version}'" }}.")
+        logger.info("Flow '${RpcServerStub.queryTemperatureFlowFQN}' is supported by ${processors.forFlow(queryTemperatureFlowFQN).joinToString(", ", "[", "]") { processor -> "'${processor.id}' version '${processor.version}'" }}.")
     }
 }

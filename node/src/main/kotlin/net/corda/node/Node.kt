@@ -4,13 +4,13 @@ import net.corda.commons.events.PublishEvent
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.cordapp.resolver.CordappsContainer
 import net.corda.node.api.events.NodeEvents
-import net.corda.node.api.flows.processing.registry.FlowsProcessorRegistry
+import net.corda.node.api.flows.processing.FlowProcessors
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class Node @Inject internal constructor(private val cordappsContainer: CordappsContainer, private val flowsProcessorRegistry: FlowsProcessorRegistry, private val configuration: Configuration, private val publishEvent: PublishEvent) {
+internal class Node @Inject internal constructor(private val cordappsContainer: CordappsContainer, private val flowProcessors: FlowProcessors.Registry, private val configuration: Configuration, private val publishEvent: PublishEvent) {
 
     companion object {
         private val logger = loggerFor<Node>()
@@ -28,7 +28,7 @@ internal class Node @Inject internal constructor(private val cordappsContainer: 
         cordapps.forEach { cordapp ->
 
             logger.info("Registering Cordapp ${cordapp.name} with version ${cordapp.version}, listening for flows ${cordapp.supportedFlowNames.joinToString(", ", "[", "]")}.")
-            flowsProcessorRegistry.register(cordapp)
+            flowProcessors.register(cordapp)
         }
 
         publishEvent(NodeEvents.Initialisation.Completed())
