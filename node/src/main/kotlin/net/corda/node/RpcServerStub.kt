@@ -1,8 +1,8 @@
 package net.corda.node
 
-import net.corda.commons.events.EventSource
 import net.corda.commons.events.filterIsInstance
 import net.corda.commons.logging.loggerFor
+import net.corda.node.api.events.EventBus
 import net.corda.node.api.events.NodeEvents
 import net.corda.node.api.flows.processing.FlowProcessors
 import javax.annotation.PostConstruct
@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, private val events: EventSource) {
+internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, private val bus: EventBus) {
 
     private companion object {
 
@@ -21,7 +21,8 @@ internal class RpcServerStub @Inject internal constructor(private val processors
     @PostConstruct
     internal fun initialize() {
 
-        events.stream.filterIsInstance<NodeEvents.Initialisation.Completed>().doOnNext { _ -> logProcessorsForQueryTemperatureFlow() }.subscribe()
+        // TODO change "bus" type to be EventBus
+        bus.events.filterIsInstance<NodeEvents.Initialisation.Completed>().doOnNext { _ -> logProcessorsForQueryTemperatureFlow() }.subscribe()
     }
 
     private fun logProcessorsForQueryTemperatureFlow() {
