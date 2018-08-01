@@ -5,6 +5,7 @@ import net.corda.commons.events.EventSource
 import net.corda.node.api.events.EventBus
 import reactor.core.publisher.EmitterProcessor
 import reactor.core.publisher.Flux
+import reactor.core.scheduler.Schedulers
 import java.io.Closeable
 import java.time.Duration
 import javax.annotation.PreDestroy
@@ -22,9 +23,8 @@ class MultiplexingEventBus @Inject constructor(sources: List<EventSource<Event>>
     private val processor = EmitterProcessor.create<Event>()
 
     // This is to ensure a subscriber receives events that were published up to 5 seconds before. It helps during initialisation.
-    override val events: Flux<Event> = processor.cache(EVENTS_LOG_TTL)
-    // This could force subscribers to run on a separate thread, to avoid deadlocks.
-//    override val events: Flux<Event> = processor.publishOn(Schedulers.parallel())
+    // The trailing `publishOn(Schedulers.parallel())` is to force subscribers to run on a thread pool, to avoid deadlocks.
+    override val events: Flux<Event> = processor.cache(EVENTS_LOG_TTL).publishOn(Schedulers.parallel())
 
     init {
         val stream = sources.map(EventSource<Event>::events).foldRight<Flux<out Event>, Flux<Event>>(Flux.empty()) { current, accumulator -> accumulator.mergeWith(current) }

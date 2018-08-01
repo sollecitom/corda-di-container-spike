@@ -6,8 +6,8 @@ include 'cordapp-api'
 include 'commons'
 
 // Adapters
-include ':corda-di-cordapps-resolver'
-project(':corda-di-cordapps-resolver').projectDir = new File('./adapters/corda-di-cordapps-resolver')
+include ':file-based-cordapps-loader'
+project(':file-based-cordapps-loader').projectDir = new File('./adapters/file-based-cordapps-loader')
 
 include ':in-memory-flows-registry'
 project(':in-memory-flows-registry').projectDir = new File('./adapters/in-memory-flows-registry')

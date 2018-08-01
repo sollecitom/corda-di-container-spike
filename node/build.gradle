@@ -7,7 +7,7 @@ dependencies {
     compile project(":node-api")
     compile project(":cordapp-api")
 
-    runtime project(":corda-di-cordapps-resolver")
+    runtime project(":file-based-cordapps-loader")
 
     runtime fileTree(include: ['*.jar'], dir: 'plugins')
 }

@@ -1,6 +1,8 @@
 package net.corda.node
 
-import net.corda.commons.events.*
+import net.corda.commons.events.EventPublisher
+import net.corda.commons.events.EventSupport
+import net.corda.commons.events.only
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.Node
 import net.corda.node.api.events.EventBus
@@ -20,7 +22,7 @@ internal class RpcServerStub @Inject internal constructor(private val processors
     }
 
     init {
-        bus.events.filterIsInstance<Node.Event.Initialisation.Completed>().doOnNext { _ -> init() }.subscribe()
+        bus.events.only<Node.Event.Initialisation.Completed>().doOnNext { _ -> init() }.subscribe()
     }
 
     private fun init() {
@@ -30,7 +32,7 @@ internal class RpcServerStub @Inject internal constructor(private val processors
     }
 
     @Named
-    internal class RpcServerStubEventSupport : EventSupport<RpcServerStub.Event>(), EventSource<RpcServerStub.Event>, EventSink<RpcServerStub.Event>
+    internal class RpcServerStubEventSupport : EventSupport<RpcServerStub.Event>()
 
     sealed class Event(id: String = UUID.randomUUID().toString(), createdAt: Instant = Instant.now()) : net.corda.commons.events.Event(id, createdAt) {
 

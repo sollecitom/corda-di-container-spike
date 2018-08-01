@@ -14,7 +14,7 @@ internal class ConsoleNewBindingLogger : InMemoryFlowsProcessorRegistry.LogNewBi
 
     override fun apply(initiating: String, processor: FlowProcessor, allInitiatedFlows: Set<FlowProcessor>) {
 
-        logger.info("New processor ${processor.description()} registered for initiating flow $initiating. Bindings are now ${allInitiatedFlows.joinToString(", ", "[", "]") { it.description() }}.")
+        logger.info("New processor ${processor.description()} registered for initiating flow '$initiating'. Bindings are now ${allInitiatedFlows.joinToString(", ", "[", "]") { it.description() }}.")
     }
 
     private fun FlowProcessor.description(): String = "'$id' version '$version'"

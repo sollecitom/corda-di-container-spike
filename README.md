@@ -17,6 +17,7 @@ An events framework, based on Project Reactor, is used to:
 
 - Allow decoupled reactive behaviour across modules.
 - Showcase a stubbed auditing service filtering all application events based on an inclusion list, with customized behaviour for each event type of interest.
+- Dynamically load / unload Cordapps, with the potential to avoid restarting nodes when changes are necessary.
 
 ## Notes and remarks
 
@@ -24,7 +25,7 @@ With regards to what stated above, some remarks:
 
 - Most modules, including all Cordapps, only depend on `javax.inject` and `JSR 250`, meaning they're completely Spring-agnostic.
 - Any Dependency Injection container compatible with `javax.inject`, `JSR 250` and package scanning will work.
-- The `di-cordapps-resolver` is able to load multiple versions of the same Cordapp at the same time.
+- The `di-cordapps-resolver` is able to load multiple versions of the same Cordapp at the same time, with complete classloading isolation.
 
 ## How to run it
 
@@ -52,9 +53,9 @@ This module defines types similar to those in Corda, which are available for Cor
 
 This module defines types that are common to most modules. Ideally this should be replaced by a collection of domain modules, but for the sake of the exercise a common set works fine.
 
-### corda-di-cordapps-resolver
+### file-based-cordapps-loader
 
-This module provides a Cordapps resolution mechanism based on a Dependency Injection container.
+This module provides a Cordapps resolution mechanism based on the file system.
 It is used at runtime by `node`.
 
 ### in-memory-flows-registry

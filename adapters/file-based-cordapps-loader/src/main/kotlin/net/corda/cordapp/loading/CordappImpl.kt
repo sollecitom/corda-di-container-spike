@@ -1,4 +1,4 @@
-package net.corda.cordapp.resolver.di
+package net.corda.cordapp.loading
 
 import net.corda.commons.logging.loggerFor
 import net.corda.cordapp.api.flows.Flows
