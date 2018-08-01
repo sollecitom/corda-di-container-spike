@@ -1,4 +1,4 @@
-package net.corda.node.api.events
+package net.corda.node.api
 
 import net.corda.commons.events.Event
 import java.time.Instant

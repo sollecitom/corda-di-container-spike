@@ -3,7 +3,7 @@ package net.corda.node
 import net.corda.commons.events.filterIsInstance
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.events.EventBus
-import net.corda.node.api.events.NodeEvents
+import net.corda.node.api.NodeEvents
 import net.corda.node.api.flows.processing.FlowProcessors
 import javax.annotation.PostConstruct
 import javax.inject.Inject
