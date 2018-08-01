@@ -1,4 +1,3 @@
 package net.corda.commons.lifecycle
 
-interface WithLifeCycle : Startable, Stoppable {
-}
+interface WithLifeCycle : Startable, Stoppable

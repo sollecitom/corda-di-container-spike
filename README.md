@@ -1,4 +1,4 @@
-# Dependency Injection Container spike
+# Dependency Injection Container Spike
 
 This project is a showcase of how Corda could benefit from a Dependency Injection container.
 
