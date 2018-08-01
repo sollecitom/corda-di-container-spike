@@ -1,19 +1,17 @@
 package net.corda.node
 
-import net.corda.commons.events.filterIsInstance
-import net.corda.commons.lifecycle.WithLifeCycle
+import net.corda.commons.events.*
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.Node
 import net.corda.node.api.events.EventBus
 import net.corda.node.api.flows.processing.FlowProcessors
-import reactor.core.Disposable
-import javax.annotation.PostConstruct
-import javax.annotation.PreDestroy
+import java.time.Instant
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, private val bus: EventBus) : WithLifeCycle {
+internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, bus: EventBus, override val source: RpcServerStubEventSupport = RpcServerStubEventSupport()) : EventPublisher<RpcServerStub.Event> {
 
     private companion object {
 
@@ -21,29 +19,22 @@ internal class RpcServerStub @Inject internal constructor(private val processors
         private const val queryTemperatureFlowFQN = "examples.cordapps.one.flows.QueryClusterAverageTemperature"
     }
 
-    private var subscription: Disposable? = null
-
-    @PostConstruct
-    override fun start() {
-
-        synchronized(this) {
-            if (subscription == null) {
-                subscription = bus.events.filterIsInstance<Node.Event.Initialisation.Completed>().doOnNext { _ -> logProcessorsForQueryTemperatureFlow() }.subscribe()
-            }
-        }
+    init {
+        bus.events.filterIsInstance<Node.Event.Initialisation.Completed>().doOnNext { _ -> init() }.subscribe()
     }
 
-    @PreDestroy
-    override fun stop() {
+    private fun init() {
 
-        synchronized(this) {
-            subscription?.dispose()
-            subscription = null
-        }
+        logger.info("Initializing RPC server. Flow '${RpcServerStub.queryTemperatureFlowFQN}' is supported by ${processors.forFlow(queryTemperatureFlowFQN).joinToString(", ", "[", "]") { processor -> "'${processor.id}' version '${processor.version}'" }}.")
+        source.publish(Event.Invocation("examples.cordapps.one.flows.QueryClusterAverageTemperature", "Bruce Wayne"))
     }
 
-    private fun logProcessorsForQueryTemperatureFlow() {
+    @Named
+    internal class RpcServerStubEventSupport : EventSupport<RpcServerStub.Event>(), EventSource<RpcServerStub.Event>, EventSink<RpcServerStub.Event>
 
-        logger.info("Flow '${RpcServerStub.queryTemperatureFlowFQN}' is supported by ${processors.forFlow(queryTemperatureFlowFQN).joinToString(", ", "[", "]") { processor -> "'${processor.id}' version '${processor.version}'" }}.")
+    sealed class Event(id: String = UUID.randomUUID().toString(), createdAt: Instant = Instant.now()) : net.corda.commons.events.Event(id, createdAt) {
+
+        // User as a String here is grossly simplified, but just to show the idea. Normally, InvocationContext would be part of this.
+        class Invocation(val flowName: String, val user: String, id: String = UUID.randomUUID().toString(), createdAt: Instant = Instant.now()) : Event(id, createdAt)
     }
 }
