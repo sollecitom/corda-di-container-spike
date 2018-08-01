@@ -1,23 +1,23 @@
 package net.corda.node
 
+import net.corda.commons.events.EventSink
+import net.corda.commons.events.EventSource
+import net.corda.commons.events.EventSupport
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.Node
 import net.corda.node.api.cordapp.resolver.CordappsContainer
 import net.corda.node.api.flows.processing.FlowProcessors
-import reactor.core.publisher.EmitterProcessor
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class DelegatingNode @Inject internal constructor(private val cordappsContainer: CordappsContainer, private val flowProcessors: FlowProcessors.Registry, private val configuration: Configuration) : Node {
+internal class DelegatingNode @Inject internal constructor(private val cordappsContainer: CordappsContainer, private val flowProcessors: FlowProcessors.Registry, private val configuration: Configuration, override val source: DelegatingNodeEventSupport = DelegatingNodeEventSupport()) : Node {
 
     companion object {
         private val logger = loggerFor<DelegatingNode>()
     }
-
-    override val events: EmitterProcessor<Node.Event> = EmitterProcessor.create<Node.Event>()
 
     @PostConstruct
     override fun start() {
@@ -34,13 +34,13 @@ internal class DelegatingNode @Inject internal constructor(private val cordappsC
             flowProcessors.register(cordapp)
         }
 
-        events.onNext(Node.Event.Initialisation.Completed())
+        source.publish(Node.Event.Initialisation.Completed())
     }
 
     @PreDestroy
     override fun stop() {
 
-        events.onComplete()
+        source.close()
     }
 
     interface Configuration {
@@ -48,4 +48,7 @@ internal class DelegatingNode @Inject internal constructor(private val cordappsC
         val networkHost: String
         val networkPort: Int
     }
+
+    @Named
+    internal class DelegatingNodeEventSupport : EventSupport<Node.Event>(), EventSource<Node.Event>, EventSink<Node.Event>
 }

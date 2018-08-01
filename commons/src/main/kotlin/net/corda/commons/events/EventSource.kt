@@ -2,7 +2,7 @@ package net.corda.commons.events
 
 import reactor.core.publisher.Flux
 
-interface EventSource<EVENT : Event> {
+interface EventSource<out EVENT : Event> {
 
     val events: Flux<out EVENT>
 }
@@ -10,6 +10,8 @@ interface EventSource<EVENT : Event> {
 interface EventPublisher<EVENT : Event> {
 
     val source: EventSource<EVENT>
+
+    val events get() = source.events
 }
 
 fun <ORIGINAL, NEW> Flux<ORIGINAL>.filterIsInstance(type: Class<NEW>): Flux<NEW> {

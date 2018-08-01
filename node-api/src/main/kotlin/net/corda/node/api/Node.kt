@@ -1,11 +1,11 @@
 package net.corda.node.api
 
-import net.corda.commons.events.EventSource
+import net.corda.commons.events.EventPublisher
 import net.corda.commons.lifecycle.WithLifeCycle
 import java.time.Instant
 import java.util.*
 
-interface Node : WithLifeCycle, EventSource<Node.Event> {
+interface Node : WithLifeCycle, EventPublisher<Node.Event> {
 
     sealed class Event(id: String = UUID.randomUUID().toString(), createdAt: Instant = Instant.now()) : net.corda.commons.events.Event(id, createdAt) {
 
