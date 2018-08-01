@@ -5,6 +5,7 @@ import net.corda.commons.events.EventSource
 import net.corda.commons.events.EventSupport
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.Node
+import net.corda.node.api.cordapp.Cordapp
 import net.corda.node.api.cordapp.resolver.CordappsContainer
 import net.corda.node.api.flows.processing.FlowProcessors
 import javax.annotation.PostConstruct
@@ -26,13 +27,7 @@ internal class DelegatingNode @Inject internal constructor(private val cordappsC
             logger.info("Joining Corda network at address $networkHost:$networkPort.")
         }
 
-        // TODO subscribe to events instead
-        val cordapps = cordappsContainer.cordapps()
-        cordapps.forEach { cordapp ->
-
-            logger.info("Registering Cordapp ${cordapp.name} with version ${cordapp.version}, listening for flows ${cordapp.supportedFlowNames.joinToString(", ", "[", "]")}.")
-            flowProcessors.register(cordapp)
-        }
+        cordappsContainer.cordapps.forEach(::registerCordappAsFlowProcessor)
 
         source.publish(Node.Event.Initialisation.Completed())
     }
@@ -41,6 +36,12 @@ internal class DelegatingNode @Inject internal constructor(private val cordappsC
     override fun stop() {
 
         source.close()
+    }
+
+    private fun registerCordappAsFlowProcessor(cordapp: Cordapp) {
+
+        logger.info("Registering Cordapp ${cordapp.name} with version ${cordapp.version}, listening for flows ${cordapp.supportedFlowNames.joinToString(", ", "[", "]")}.")
+        flowProcessors.register(cordapp)
     }
 
     interface Configuration {

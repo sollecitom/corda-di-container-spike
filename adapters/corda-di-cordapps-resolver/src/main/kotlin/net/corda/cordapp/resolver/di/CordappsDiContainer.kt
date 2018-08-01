@@ -1,12 +1,8 @@
 package net.corda.cordapp.resolver.di
 
-import net.corda.commons.logging.loggerFor
-import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
 import net.corda.node.api.cordapp.resolver.CordappsContainer
-import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import java.io.File
-import java.net.URLClassLoader
 import java.util.jar.Attributes
 import java.util.jar.JarInputStream
 import java.util.jar.Manifest
@@ -16,20 +12,19 @@ import javax.inject.Named
 internal class CordappsDiContainer : CordappsContainer {
 
     companion object {
-        const val ROOT_PACKAGE_SEPARATOR = ";"
+        private const val ROOT_PACKAGE_SEPARATOR = ";"
 
         private val CORDAPP_AUGMENTING_PACKAGES = arrayOf("net.corda.node.services")
 
         private val cordappsDirectory = File("node/cordapps")
     }
 
-    override fun cordapps(): Set<Cordapp> {
+    override val cordapps: Set<Cordapp> by lazy {
 
-        // TODO use a watcher to pick up events
         val cordapps = cordappsDirectory.walkTopDown().filter(this::isJar).map(this::toCordapp).toList()
         val distinct = cordapps.toSortedSet(Comparator.comparing(Cordapp::name).thenComparing(Cordapp::version))
         require(distinct.size == cordapps.size) { "Cordapps are not distinct. Found $cordapps." }
-        return distinct
+        distinct
     }
 
     private fun toCordapp(jarFile: File): CordappImpl {
@@ -46,77 +41,6 @@ internal class CordappsDiContainer : CordappsContainer {
             }
             CordappImpl(cordappName, cordappVersion, jarFile, rootPackages + CORDAPP_AUGMENTING_PACKAGES, this.javaClass.classLoader)
         }
-    }
-
-    private class CordappImpl(override val name: String, override val version: Int, private val jarFile: File, private val rootPackages: Set<String>, parentClassLoader: ClassLoader) : Cordapp {
-
-        private companion object {
-
-            private val logger = loggerFor<CordappImpl>()
-        }
-
-        private val classLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()), parentClassLoader)
-
-        private val initiatedFlows: Set<Flows.Initiated> by lazy {
-
-            // Here we have a classLoader per Cordapp per version, along with a separate ApplicationContext.
-            val context = AnnotationConfigApplicationContext()
-            context.classLoader = classLoader
-            context.scan(*rootPackages.toTypedArray())
-            context.refresh()
-            context.getBeansOfType(Flows.Initiated::class.java).values.toSet()
-        }
-
-        override fun isInitiatedBy(initiatingFlowName: String): Boolean {
-
-            return flowsInitiatedBy(initiatingFlowName).isNotEmpty()
-        }
-
-        override val supportedFlowNames: Set<String> by lazy {
-            initiatedFlows.flatMap(Flows.Initiated::initiatedBy).map { it.java.name }.toSortedSet()
-        }
-
-        override fun process(flowName: String, payload: ByteArray) {
-
-            logger.info("Cordapp '$name' version '$version' is processing flow '$flowName'.")
-        }
-
-        private fun flowsInitiatedBy(initiatingFlowName: String): Set<Flows.Initiated> = initiatedFlows.filter { it.initiatedBy.any { it.qualifiedName == initiatingFlowName } }.toSet()
-
-        override fun equals(other: Any?): Boolean {
-
-            if (this === other) {
-                return true
-            }
-            if (javaClass != other?.javaClass) {
-                return false
-            }
-
-            other as CordappImpl
-
-            if (name != other.name) {
-                return false
-            }
-            if (version != other.version) {
-                return false
-            }
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-
-            var result = name.hashCode()
-            result = 31 * result + version
-            return result
-        }
-
-        override fun toString(): String {
-
-            return "{name='$name', version=$version, jarFile='${jarFile.toPath().toAbsolutePath()}'}"
-        }
-
-
     }
 
     private fun isJar(file: File) = !file.isDirectory && file.extension == "jar"
