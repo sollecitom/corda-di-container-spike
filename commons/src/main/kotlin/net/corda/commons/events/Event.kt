@@ -1,13 +1,33 @@
 package net.corda.commons.events
 
 import java.time.Instant
+import java.util.*
 
-// TODO create a base Event class which fixes equals and hashcode in terms of "id".
-interface Event {
+// Time-based UUIDs are better than random-based, but for the sake of the exercise it is fine as it is.
+abstract class Event(val id: String = UUID.randomUUID().toString(), val createdAt: Instant = Instant.now()) {
 
-    val id: String
+    // InvocationContext would be here, perhaps as an optional field, to allow correlation.
 
-    val createdAt: Instant
+    final override fun equals(other: Any?): Boolean {
 
-    // TODO perhaps an InvocationContext here?
+        if (this === other) {
+            return true
+        }
+        if (javaClass != other?.javaClass) {
+            return false
+        }
+
+        other as Event
+
+        if (id != other.id) {
+            return false
+        }
+
+        return true
+    }
+
+    final override fun hashCode(): Int {
+
+        return id.hashCode()
+    }
 }
