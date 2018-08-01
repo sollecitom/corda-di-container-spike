@@ -9,9 +9,9 @@ interface EventSource<EVENT : Event> {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <ORIGINAL, NEW> Flux<ORIGINAL>.filterIsInstance(type: Class<*>): Flux<NEW> {
+fun <ORIGINAL, NEW> Flux<ORIGINAL>.filterIsInstance(type: Class<NEW>): Flux<NEW> {
 
-    return filter(type::isInstance).map { element -> element as NEW }
+    return filter(type::isInstance).cast(type)
 }
 
 inline fun <reified NEW> Flux<*>.filterIsInstance(): Flux<NEW> = filterIsInstance(NEW::class.java)
