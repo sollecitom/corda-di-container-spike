@@ -21,7 +21,6 @@ internal class RpcServerStub @Inject internal constructor(private val processors
     @PostConstruct
     internal fun initialize() {
 
-        // TODO change "bus" type to be EventBus
         bus.events.filterIsInstance<NodeEvents.Initialisation.Completed>().doOnNext { _ -> logProcessorsForQueryTemperatureFlow() }.subscribe()
     }
 
