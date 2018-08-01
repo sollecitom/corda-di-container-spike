@@ -1,8 +1,5 @@
 package net.corda.node.api
 
-interface Node {
+import net.corda.commons.lifecycle.WithLifeCycle
 
-    fun start()
-
-    fun stop()
-}
+interface Node : WithLifeCycle

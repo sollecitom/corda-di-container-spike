@@ -3,10 +3,11 @@ package net.corda.node
 import net.corda.commons.events.PublishEvent
 import net.corda.commons.logging.loggerFor
 import net.corda.node.api.Node
-import net.corda.node.api.cordapp.resolver.CordappsContainer
 import net.corda.node.api.NodeEvents
+import net.corda.node.api.cordapp.resolver.CordappsContainer
 import net.corda.node.api.flows.processing.FlowProcessors
 import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,6 +36,7 @@ internal class DelegatingNode @Inject internal constructor(private val cordappsC
         publishEvent(NodeEvents.Initialisation.Completed())
     }
 
+    @PreDestroy
     override fun stop() {
 
         // TODO call onComplete for the event stream
