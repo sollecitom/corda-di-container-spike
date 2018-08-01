@@ -8,7 +8,6 @@ interface EventSource<EVENT : Event> {
     val events: Flux<out EVENT>
 }
 
-@Suppress("UNCHECKED_CAST")
 fun <ORIGINAL, NEW> Flux<ORIGINAL>.filterIsInstance(type: Class<NEW>): Flux<NEW> {
 
     return filter(type::isInstance).cast(type)
