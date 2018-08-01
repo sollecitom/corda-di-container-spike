@@ -1,25 +1,30 @@
 package net.corda.node.impl
 
 import net.corda.commons.events.Event
+import net.corda.commons.events.EventSource
 import net.corda.commons.events.PublishEvent
 import net.corda.node.api.events.EventBus
 import reactor.core.publisher.EmitterProcessor
 import reactor.core.publisher.Flux
 import java.io.Closeable
 import javax.annotation.PreDestroy
+import javax.inject.Inject
 import javax.inject.Named
 
-// TODO this should be in a separate module depending on commons and available to adapters as well, not in node-api. The package "impl" should be deleted too.
+// This would normally be in a separate module depending on commons and available to adapters as well, not in node-api. The package "impl" should not exist as well.
 @Named
-class MultiplexingEventBus : EventBus, PublishEvent, Closeable {
+class MultiplexingEventBus @Inject constructor(sources: List<EventSource<out Event>>) : EventBus, PublishEvent, Closeable {
 
-    private val stream = EmitterProcessor.create<Event>()
+    override val events: EmitterProcessor<Event> = EmitterProcessor.create<Event>()
 
-    // TODO evaluate whether this should use Schedulers.Io() to make processing non-blocking.
-    override val events: Flux<out Event> = stream
+    init {
+        val stream = sources.map(EventSource<out Event>::events).foldRight<Flux<out Event>, Flux<Event>>(Flux.empty()) { current, accumulator -> accumulator.mergeWith(current) }
+        stream.subscribe(events::onNext)
+    }
 
-    override fun invoke(event: Event) = stream.onNext(event)
+    // TODO check whether this is needed (think about Cordapps and plugins)
+    override fun invoke(event: Event) = events.onNext(event)
 
     @PreDestroy
-    override fun close() = stream.onComplete()
+    override fun close() = events.onComplete()
 }
