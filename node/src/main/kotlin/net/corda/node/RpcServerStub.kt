@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, bus: EventBus, override val source: RpcServerStubEventSupport = RpcServerStubEventSupport()) : EventPublisher<RpcServerStub.Event> {
+internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, private val configuration: RpcServerStub.Configuration, bus: EventBus, override val source: RpcServerStubEventSupport = RpcServerStubEventSupport()) : EventPublisher<RpcServerStub.Event> {
 
     private companion object {
 
@@ -27,7 +27,12 @@ internal class RpcServerStub @Inject internal constructor(private val processors
 
     private fun init() {
 
-        logger.info("Initializing RPC server. Flow '${RpcServerStub.queryTemperatureFlowFQN}' is supported by ${processors.forFlow(queryTemperatureFlowFQN).joinToString(", ", "[", "]") { processor -> "'${processor.id}' version '${processor.version}'" }}.")
+        with(configuration) {
+            logger.info("Initializing RPC server at address $networkHost:$networkPort.")
+        }
+
+        logger.info("Flow '${RpcServerStub.queryTemperatureFlowFQN}' is supported by ${processors.forFlow(queryTemperatureFlowFQN).joinToString(", ", "[", "]") { processor -> "'${processor.id}' version '${processor.version}'" }}.")
+
         source.publish(Event.Invocation("examples.cordapps.one.flows.QueryClusterAverageTemperature", "Bruce Wayne"))
     }
 
@@ -38,5 +43,11 @@ internal class RpcServerStub @Inject internal constructor(private val processors
 
         // User as a String here is grossly simplified, but just to show the idea. Normally, InvocationContext would be part of this.
         class Invocation(val flowName: String, val user: String, id: String = UUID.randomUUID().toString(), createdAt: Instant = Instant.now()) : Event(id, createdAt)
+    }
+
+    interface Configuration {
+
+        val networkHost: String
+        val networkPort: Int
     }
 }

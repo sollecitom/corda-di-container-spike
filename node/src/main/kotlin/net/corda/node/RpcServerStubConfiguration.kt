@@ -10,7 +10,7 @@ private const val NETWORK_PORT = "config.node.network.port"
 private const val PROPERTIES = "/application.properties"
 
 @Named
-internal class NodeConfiguration : Properties(PROPERTIES, NodeConfiguration::class), DelegatingNode.Configuration {
+internal class RpcServerConfiguration : Properties(PROPERTIES, RpcServerConfiguration::class), RpcServerStub.Configuration {
 
     companion object {
         private val hostKey = Key(NETWORK_HOST) { _, value -> value }
