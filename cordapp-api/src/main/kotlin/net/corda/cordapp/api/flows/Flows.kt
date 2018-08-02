@@ -1,6 +1,6 @@
 package net.corda.cordapp.api.flows
 
-import net.corda.commons.network.Party
+import net.corda.commons.domain.network.Party
 import kotlin.reflect.KClass
 
 object Flows {
@@ -30,6 +30,7 @@ object Flows {
     }
 }
 
+// Not advocating using Quasar with this. It is just to keep a similarity with current structure of Corda.
 annotation class Suspendable
 
 inline fun <reified MESSAGE : Any> Flows.Session.receive() = this.receive(MESSAGE::class)

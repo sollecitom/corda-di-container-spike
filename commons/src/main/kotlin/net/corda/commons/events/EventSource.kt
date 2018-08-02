@@ -6,17 +6,3 @@ interface EventSource<out EVENT : Event> {
 
     val events: Flux<out EVENT>
 }
-
-interface EventPublisher<EVENT : Event> {
-
-    val source: EventSource<EVENT>
-
-    val events get() = source.events
-}
-
-fun <ORIGINAL, NEW> Flux<ORIGINAL>.only(type: Class<NEW>): Flux<NEW> {
-
-    return filter(type::isInstance).cast(type)
-}
-
-inline fun <reified NEW> Flux<*>.only(): Flux<NEW> = only(NEW::class.java)

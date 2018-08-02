@@ -1,6 +1,6 @@
 package net.corda.cordapp.loading
 
-import net.corda.commons.logging.loggerFor
+import net.corda.commons.utils.logging.loggerFor
 import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
 import org.springframework.context.annotation.AnnotationConfigApplicationContext

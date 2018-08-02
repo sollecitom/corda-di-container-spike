@@ -1,7 +1,7 @@
 package net.corda.node.adapters
 
 import net.corda.commons.di.DefaultBehaviour
-import net.corda.commons.logging.loggerFor
+import net.corda.commons.utils.logging.loggerFor
 import net.corda.node.api.flows.processing.FlowProcessor
 import net.corda.node.api.flows.processing.FlowProcessors
 import javax.annotation.PostConstruct
@@ -9,7 +9,7 @@ import javax.inject.Named
 
 @DefaultBehaviour
 @Named
-class NopeFlowsProcessorRegistry : FlowProcessors.Registry, FlowProcessors.Repository {
+internal class NopeFlowsProcessorRegistry : FlowProcessors.Registry, FlowProcessors.Repository {
 
     private companion object {
 
@@ -17,7 +17,7 @@ class NopeFlowsProcessorRegistry : FlowProcessors.Registry, FlowProcessors.Repos
     }
 
     @PostConstruct
-    private fun start() {
+    private fun logInit() {
 
         // This still happens, regardless of the priority.
         logger.info("Initializing NopeFlowsProcessorRegistry")

@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 @SpringBootApplication(scanBasePackages = ["net.corda"])
 private open class NodeStarter
 
-internal fun main(args: Array<String>) {
+fun main(args: Array<String>) {
 
     val application = SpringApplication(NodeStarter::class.java)
 

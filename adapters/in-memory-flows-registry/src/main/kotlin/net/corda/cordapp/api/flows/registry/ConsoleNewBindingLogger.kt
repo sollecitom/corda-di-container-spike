@@ -1,6 +1,6 @@
 package net.corda.cordapp.api.flows.registry
 
-import net.corda.commons.logging.loggerFor
+import net.corda.commons.utils.logging.loggerFor
 import net.corda.node.api.flows.processing.FlowProcessor
 import javax.inject.Named
 

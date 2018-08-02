@@ -1,7 +1,7 @@
 package net.corda.cordapp.api.flows.registry
 
 import net.corda.commons.di.Plugin
-import net.corda.commons.logging.loggerFor
+import net.corda.commons.utils.logging.loggerFor
 import net.corda.node.api.flows.processing.FlowProcessor
 import net.corda.node.api.flows.processing.FlowProcessors
 import java.util.concurrent.ConcurrentHashMap
@@ -22,7 +22,7 @@ class InMemoryFlowsProcessorRegistry @Inject constructor(private val logNewBindi
     }
 
     @PostConstruct
-    private fun start() {
+    private fun logInitialisation() {
 
         // This still happens, regardless of the priority.
         logger.info("Initializing InMemoryFlowsProcessorRegistry")

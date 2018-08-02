@@ -1,17 +1,19 @@
 package net.corda.node
 
 import net.corda.commons.events.EventSupport
-import net.corda.commons.events.only
-import net.corda.commons.logging.loggerFor
+import net.corda.commons.utils.logging.loggerFor
+import net.corda.commons.utils.reactive.only
 import net.corda.node.api.Node
 import net.corda.node.api.cordapp.Cordapp
 import net.corda.node.api.cordapp.CordappsLoader
 import net.corda.node.api.flows.processing.FlowProcessors
+import reactor.core.publisher.toFlux
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import javax.inject.Inject
 import javax.inject.Named
 
+// TODO turn NodeConfiguration into RPCServerConfiguration
 @Named
 internal class DelegatingNode @Inject internal constructor(private val cordappsLoader: CordappsLoader, private val flowProcessors: FlowProcessors.Registry, private val configuration: Configuration, override val source: DelegatingNodeEventSupport = DelegatingNodeEventSupport()) : Node {
 
@@ -26,7 +28,7 @@ internal class DelegatingNode @Inject internal constructor(private val cordappsL
             logger.info("Joining Corda network at address $networkHost:$networkPort.")
         }
 
-        cordappsLoader.events.only<CordappsLoader.Event.CordappsWereLoaded>().doOnNext { event -> event.loaded.forEach(::registerCordappAsFlowProcessor) }.subscribe()
+        cordappsLoader.events.only<CordappsLoader.Event.CordappsWereLoaded>().flatMap { it.loaded.toFlux() }.doOnNext(::registerCordappAsFlowProcessor).subscribe()
 
         source.publish(Node.Event.Initialisation.Completed())
     }

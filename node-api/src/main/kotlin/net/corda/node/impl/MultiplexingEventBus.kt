@@ -13,6 +13,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 // This would normally be in a separate module depending on commons and available to adapters as well, not in node-api. The package "impl" should not exist as well.
+// It is not in module "node" to stay available for adapters modules.
 @Named
 class MultiplexingEventBus @Inject constructor(sources: List<EventSource<Event>>) : EventBus, Closeable {
 
