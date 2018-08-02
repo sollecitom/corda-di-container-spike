@@ -28,7 +28,7 @@ internal class RpcServerStub @Inject internal constructor(private val processors
     private fun init() {
 
         with(configuration) {
-            logger.info("Initializing RPC server at address $networkHost:$networkPort.")
+            logger.info("Initializing RPC server on address $networkHost:$networkPort.")
         }
 
         logger.info("Flow '${RpcServerStub.queryTemperatureFlowFQN}' is supported by ${processors.forFlow(queryTemperatureFlowFQN).joinToString(", ", "[", "]") { processor -> "'${processor.id}' version '${processor.version}'" }}.")
