@@ -4,17 +4,13 @@ import net.corda.commons.logging.loggerFor
 import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
-import java.io.File
-import java.net.URLClassLoader
 
-internal class CordappImpl(override val name: String, override val version: Int, private val jarFile: File, private val rootPackages: Set<String>, parentClassLoader: ClassLoader) : Cordapp {
+internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val rootPackages: Set<String>, private val classLoader: ClassLoader) : Cordapp {
 
     private companion object {
 
-        private val logger = loggerFor<CordappImpl>()
+        private val logger = loggerFor<RestrictedClassLoadingCordapp>()
     }
-
-    private val classLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()), parentClassLoader)
 
     private val initiatedFlows: Set<Flows.Initiated> by lazy {
 
@@ -51,7 +47,7 @@ internal class CordappImpl(override val name: String, override val version: Int,
             return false
         }
 
-        other as CordappImpl
+        other as RestrictedClassLoadingCordapp
 
         if (name != other.name) {
             return false
@@ -72,6 +68,6 @@ internal class CordappImpl(override val name: String, override val version: Int,
 
     override fun toString(): String {
 
-        return "{name='$name', version=$version, jarFile='${jarFile.toPath().toAbsolutePath()}'}"
+        return "{name='$name', version=$version'}"
     }
 }

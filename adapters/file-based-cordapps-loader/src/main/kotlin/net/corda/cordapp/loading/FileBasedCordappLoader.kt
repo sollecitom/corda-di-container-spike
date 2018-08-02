@@ -4,6 +4,7 @@ import net.corda.commons.events.EventSupport
 import net.corda.node.api.cordapp.Cordapp
 import net.corda.node.api.cordapp.CordappsLoader
 import java.io.File
+import java.net.URLClassLoader
 import java.util.jar.Attributes
 import java.util.jar.JarInputStream
 import java.util.jar.Manifest
@@ -40,8 +41,9 @@ internal class FileBasedCordappLoader @Inject internal constructor(override val 
         source.publish(CordappsLoader.Event.CordappsWereLoaded(cordapps))
     }
 
-    private fun toCordapp(jarFile: File): CordappImpl {
+    private fun toCordapp(jarFile: File): RestrictedClassLoadingCordapp {
 
+        val cordappClassLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()), this.javaClass.classLoader)
         return JarInputStream(jarFile.inputStream()).use { jar ->
 
             val manifest = jar.manifest
@@ -52,7 +54,7 @@ internal class FileBasedCordappLoader @Inject internal constructor(override val 
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            CordappImpl(cordappName, cordappVersion, jarFile, rootPackages + CORDAPP_AUGMENTING_PACKAGES, this.javaClass.classLoader)
+            RestrictedClassLoadingCordapp(cordappName, cordappVersion, rootPackages + CORDAPP_AUGMENTING_PACKAGES, cordappClassLoader)
         }
     }
 
