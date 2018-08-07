@@ -25,7 +25,7 @@ With regards to what stated above, some remarks:
 
 - Most modules, including all Cordapps, only depend on `javax.inject` and `JSR 250`, meaning they're completely Spring-agnostic.
 - Any Dependency Injection container compatible with `javax.inject`, `JSR 250` and package scanning will work.
-- The `di-cordapps-resolver` is able to load multiple versions of the same Cordapp at the same time, with complete classloading isolation.
+- The `file-based-cordapps-loader` is able to load multiple versions of the same Cordapp at the same time, with complete classloading isolation.
 
 ## How to run it
 
