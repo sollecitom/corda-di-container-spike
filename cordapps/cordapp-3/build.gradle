@@ -7,13 +7,13 @@ dependencies {
 task fatJar(type: Jar) {
     manifest {
         attributes(
-                "Implementation-Title": "net.corda.spikes.di-container-spike.cordapp3",
-                "Implementation-Version": "1",
-                "Root-Packages": "examples.cordapps.three"
+            "Implementation-Title": "net.corda.spikes.di-container-spike.cordapp3",
+            "Implementation-Version": "1",
+            "Root-Packages": "examples.cordapps.three"
         )
     }
     baseName = project.name + '-all'
-    from { (configurations.compile - configurations.compileOnly).collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
@@ -24,4 +24,4 @@ fatJar.doLast {
     }
 }
 
-build.dependsOn(fatJar)
+assemble.dependsOn(fatJar)

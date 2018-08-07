@@ -2,9 +2,9 @@ package net.corda.cordapp.api.flows.registry
 
 import net.corda.commons.utils.logging.loggerFor
 import net.corda.node.api.flows.processing.FlowProcessor
-import javax.inject.Named
+import javax.enterprise.context.ApplicationScoped
 
-@Named
+@ApplicationScoped
 internal class ConsoleNewBindingLogger : InMemoryFlowsProcessorRegistry.LogNewBinding {
 
     private companion object {

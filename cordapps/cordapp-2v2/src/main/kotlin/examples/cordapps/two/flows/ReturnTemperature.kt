@@ -7,10 +7,10 @@ import net.corda.cordapp.api.flows.Flows
 import net.corda.cordapp.api.flows.Suspendable
 import net.corda.commons.utils.logging.loggerFor
 import javax.annotation.PostConstruct
+import javax.enterprise.context.Dependent
 import javax.inject.Inject
-import javax.inject.Named
 
-@Named
+@Dependent
 internal class ReturnTemperature @Inject constructor(private val sensor: Sensor<Temperature>) : Flows.Initiated {
 
     companion object {

@@ -5,7 +5,9 @@ import net.corda.cordapp.api.flows.Flows
 import net.corda.cordapp.api.flows.Suspendable
 import net.corda.cordapp.api.flows.receive
 import net.corda.commons.domain.network.Party
+import javax.enterprise.context.ApplicationScoped
 
+@ApplicationScoped
 class QueryClusterAverageTemperature(private val parties: Set<Party>) : Flows.Initiating<Temperature> {
 
     @Suspendable

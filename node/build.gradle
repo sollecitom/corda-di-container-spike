@@ -1,13 +1,13 @@
 dependencies {
-    compile "org.springframework.boot:spring-boot:$spring_boot_version"
-    compile "org.springframework.boot:spring-boot-autoconfigure:$spring_boot_version"
-    runtime "org.springframework.boot:spring-boot-starter-log4j2:$spring_boot_version"
+    implementation "org.jboss.weld.se:weld-se-core:$weld_version"
+    implementation "org.jboss:jandex:$jandex_version"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version"
 
-    compile project(":commons")
-    compile project(":node-api")
-    compile project(":cordapp-api")
+    implementation project(':commons')
+    implementation project(':node-api')
+    implementation project(':cordapp-api')
 
-    runtime project(":file-based-cordapps-loader")
+    implementation project(':file-based-cordapps-loader')
 
-    runtime fileTree(include: ['*.jar'], dir: 'plugins')
+    runtimeOnly fileTree(include: ['*.jar'], dir: 'plugins')
 }

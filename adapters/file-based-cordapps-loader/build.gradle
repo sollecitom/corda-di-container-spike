@@ -1,5 +1,4 @@
 dependencies {
-    compileOnly "org.springframework:spring-context:${spring_version}"
-
-    compileOnly project(":node-api")
+    compileOnly "org.jboss.weld.se:weld-se-core:$weld_version"
+    compileOnly project(':node-api')
 }

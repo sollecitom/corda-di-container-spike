@@ -1,5 +1,6 @@
 dependencies {
-    compileOnly project(":node-api")
+    compileOnly project(':node-api')
+    compileOnly project(':commons')
 }
 
 jar {
@@ -21,4 +22,4 @@ jar.doLast {
     }
 }
 
-build.dependsOn(jar)
+assemble.dependsOn jar

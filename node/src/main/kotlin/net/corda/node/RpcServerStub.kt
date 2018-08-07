@@ -9,11 +9,13 @@ import net.corda.node.api.events.EventBus
 import net.corda.node.api.flows.processing.FlowProcessors
 import java.time.Instant
 import java.util.*
+import javax.annotation.PostConstruct
+import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.event.Observes
 import javax.inject.Inject
-import javax.inject.Named
 
-@Named
-internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, private val configuration: RpcServerStub.Configuration, bus: EventBus, override val source: RpcServerStubEventSupport = RpcServerStubEventSupport()) : EventPublisher<RpcServerStub.Event> {
+@ApplicationScoped
+internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, private val configuration: RpcServerStub.Configuration, private val bus: EventBus, override val source: EventSupport<RpcServerStub.Event>) : EventPublisher<RpcServerStub.Event> {
 
     private companion object {
 
@@ -21,22 +23,24 @@ internal class RpcServerStub @Inject internal constructor(private val processors
         private const val queryTemperatureFlowFQN = "examples.cordapps.one.flows.QueryClusterAverageTemperature"
     }
 
-    init {
+    @PostConstruct
+    fun setup() {
         bus.events.only<Node.Event.Initialisation.Completed>().doOnNext { _ -> init() }.subscribe()
     }
 
     private fun init() {
-
         with(configuration) {
             logger.info("Initializing RPC server on address $networkHost:$networkPort.")
         }
 
         logger.info("Flow '${RpcServerStub.queryTemperatureFlowFQN}' is supported by ${processors.forFlow(queryTemperatureFlowFQN).joinToString(", ", "[", "]") { processor -> "'${processor.id}' version '${processor.version}'" }}.")
-
-        source.publish(Event.Invocation("examples.cordapps.one.flows.QueryClusterAverageTemperature", "Bruce Wayne"))
     }
 
-    @Named
+    fun invoke(@Observes evt: Event.Invocation) {
+        source.publish(evt)
+    }
+
+    @ApplicationScoped
     internal class RpcServerStubEventSupport : EventSupport<RpcServerStub.Event>()
 
     sealed class Event(id: String = UUID.randomUUID().toString(), createdAt: Instant = Instant.now()) : net.corda.commons.events.Event(id, createdAt) {

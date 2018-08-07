@@ -3,11 +3,11 @@ package examples.cordapps.two.adapters
 import com.natpryce.konfig.Key
 import examples.cordapps.one.domain.Temperature
 import net.corda.commons.utils.Properties
-import javax.inject.Named
+import javax.enterprise.context.Dependent
 
 private const val PROPERTIES = "/cordapp2.properties"
 
-@Named
+@Dependent
 internal class ResolvedConfiguration : Properties(PROPERTIES, ResolvedConfiguration::class), ConfigurableTemperatureSensor.Configuration {
 
     companion object {

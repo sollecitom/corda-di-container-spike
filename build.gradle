@@ -2,88 +2,96 @@ group 'net.corda.spikes.di-container-spike'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.java_version = '1.8'
-    ext.kotlin_version = '1.2.51'
-    ext.junit_version = '5.2.0'
-    ext.junit_gradle_plugin_version = '1.2.0'
+    ext {
+        java_version = '1.8'
+        kotlin_version = '1.2.51'
+        junit_version = '5.2.0'
+        junit_gradle_plugin_version = '1.2.0'
 
-    ext.spring_boot_version = '2.0.3.RELEASE'
-    ext.spring_version = '5.0.0.RELEASE'
-    ext.javax_annotation_api_version = '1.3.2'
-    ext.javax_inject_version = '1'
+        javax_cdi_version = '1.2'
+        javax_annotation_api_version = '1.3.2'
+
+        weld_version = '3.0.5.Final'
+        jandex_version = '2.0.5.Final'
+        log4j_version = '2.11.1'
+    }
 
     repositories {
-        mavenLocal()
         mavenCentral()
         jcenter()
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'kotlin'
+apply plugin: 'base'
 
-allprojects {
-
+subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
-        maven { url 'https://dl.bintray.com/kotlin/exposed' }
-        maven { url 'https://jitpack.io' }
     }
 
     apply plugin: 'kotlin'
+    apply plugin: 'kotlin-allopen'
     apply plugin: 'idea'
+
+    allOpen {
+        annotations(
+            "javax.enterprise.context.ApplicationScoped"
+        )
+    }
 
     sourceCompatibility = java_version
 
-    compileKotlin {
-        kotlinOptions.jvmTarget = java_version
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = java_version
-    }
-
     dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+        compileOnly "javax.enterprise:cdi-api:$javax_cdi_version"
+
         testCompile("org.junit.jupiter:junit-jupiter-api:$junit_version")
         testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit_version")
+        testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     }
-}
 
-ext.nodeCordappsDirectory = "${project.rootDir.path}" + File.separator + "node" + File.separator + "cordapps"
-ext.nodePluginsDirectory = "${project.rootDir.path}" + File.separator + "node" + File.separator + "plugins"
-
-subprojects { it ->
-
-    idea {
-        module {
-            downloadJavadoc = true // defaults to false
-            downloadSources = true
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+            javaParameters = true
+            freeCompilerArgs = ['-Xjvm-default=enable']
         }
     }
 
-    dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    // We would normally handle META-INF/beans.xml as a resource.
+    // But we need to copy it into the classes directory so that
+    // we can also run the application within IntelliJ.
+    task copyWeld(type: Copy) {
+        from 'src/main/weld'
+        into compileKotlin.destinationDir
+    }
+    processResources.dependsOn copyWeld
 
-        compile "javax.inject:javax.inject:$javax_inject_version"
-        compile "javax.annotation:javax.annotation-api:$javax_annotation_api_version"
-
-//        Test
-        testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    tasks.withType(AbstractArchiveTask).all {
+        reproducibleFileOrder = true
     }
 }
 
+ext {
+    nodeCordappsDirectory = file("$rootDir/node/cordapps")
+    nodePluginsDirectory = file("$rootDir/node/plugins")
+}
+
 clean.doFirst {
-    file(nodePluginsDirectory).deleteDir()
-    file(nodeCordappsDirectory).deleteDir()
+    nodePluginsDirectory.deleteDir()
+    nodeCordappsDirectory.deleteDir()
 }
 
 clean.doLast {
-    file(nodePluginsDirectory).mkdirs()
-    file(nodeCordappsDirectory).mkdirs()
+    nodePluginsDirectory.mkdirs()
+    nodeCordappsDirectory.mkdirs()
 }

@@ -3,23 +3,16 @@ package net.corda.cordapp.loading
 import net.corda.commons.utils.logging.loggerFor
 import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
-import org.springframework.context.annotation.AnnotationConfigApplicationContext
+import org.jboss.weld.environment.se.Weld
 
 internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val rootPackages: Set<String>, private val classLoader: ClassLoader) : Cordapp {
-
     private companion object {
-
         private val logger = loggerFor<RestrictedClassLoadingCordapp>()
     }
 
     private val initiatedFlows: Set<Flows.Initiated> by lazy {
-
-        // Here we have a classLoader per Cordapp per version, along with a separate ApplicationContext.
-        val context = AnnotationConfigApplicationContext()
-        context.classLoader = classLoader
-        context.scan(*rootPackages.toTypedArray())
-        context.refresh()
-        context.getBeansOfType(Flows.Initiated::class.java).values.toSet()
+        Weld.newInstance().setClassLoader(classLoader)
+                .initialize().select(Flows.Initiated::class.java).toSet()
     }
 
     override fun isInitiatedBy(initiatingFlowName: String): Boolean {

@@ -1,17 +1,19 @@
 package net.corda.cordapp.api.flows.registry
 
-import net.corda.commons.di.Plugin
 import net.corda.commons.utils.logging.loggerFor
 import net.corda.node.api.flows.processing.FlowProcessor
 import net.corda.node.api.flows.processing.FlowProcessors
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import javax.annotation.PostConstruct
+import javax.annotation.Priority
+import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.inject.Alternative
 import javax.inject.Inject
-import javax.inject.Named
 
-@Plugin
-@Named
+@Alternative
+@Priority(0)
+@ApplicationScoped
 class InMemoryFlowsProcessorRegistry @Inject constructor(private val logNewBinding: LogNewBinding) : FlowProcessors.Registry, FlowProcessors.Repository {
 
     private val processorsByFlow: ConcurrentMap<String, MutableSet<FlowProcessor>> = ConcurrentHashMap()

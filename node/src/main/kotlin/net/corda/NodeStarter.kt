@@ -1,19 +1,26 @@
 package net.corda
 
-import org.springframework.boot.Banner
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.WebApplicationType
-import org.springframework.boot.autoconfigure.SpringBootApplication
+import net.corda.commons.utils.logging.loggerFor
+import net.corda.node.DelegatingNode
+import net.corda.node.RpcServerStub.Event
+import org.jboss.weld.environment.se.Weld
 
-@SpringBootApplication(scanBasePackages = ["net.corda"])
-private open class NodeStarter
+class NodeStarter {
+    private companion object {
+        private val log = loggerFor<NodeStarter>()
 
-fun main(args: Array<String>) {
-
-    val application = SpringApplication(NodeStarter::class.java)
-
-    application.setBannerMode(Banner.Mode.OFF)
-    application.webApplicationType = WebApplicationType.NONE
-
-    application.run(*args)
+        @JvmStatic
+        fun main(args: Array<String>) {
+            Weld.newInstance()
+                .initialize()
+                .use { container ->
+                    container.beanManager.fireEvent(DelegatingNode.BootEvent())
+                    log.info("RUNNING NODE")
+                    container.beanManager.fireEvent(Event.Invocation("examples.cordapps.one.flows.QueryClusterAverageTemperature", "Bruce Wayne"))
+                    log.info("Wait for it...")
+                    Thread.sleep(5000)
+                }
+            log.info("Done.")
+        }
+    }
 }

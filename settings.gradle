@@ -6,21 +6,17 @@ include 'cordapp-api'
 include 'commons'
 
 // Adapters
-include ':file-based-cordapps-loader'
-project(':file-based-cordapps-loader').projectDir = new File('./adapters/file-based-cordapps-loader')
-
-include ':in-memory-flows-registry'
-project(':in-memory-flows-registry').projectDir = new File('./adapters/in-memory-flows-registry')
+include 'file-based-cordapps-loader'
+include 'in-memory-flows-registry'
+['file-based-cordapps-loader', 'in-memory-flows-registry'].each {
+    project(":$it").projectDir = file("$settingsDir/adapters/$it")
+}
 
 // Cordapps
-include ':cordapp-1'
-project(':cordapp-1').projectDir = new File('./cordapps/cordapp-1')
-
-include ':cordapp-2'
-project(':cordapp-2').projectDir = new File('./cordapps/cordapp-2')
-
-include ':cordapp-2v2'
-project(':cordapp-2v2').projectDir = new File('./cordapps/cordapp-2v2')
-
-include ':cordapp-3'
-project(':cordapp-3').projectDir = new File('./cordapps/cordapp-3')
+include 'cordapp-1'
+include 'cordapp-2'
+include 'cordapp-2v2'
+include 'cordapp-3'
+['cordapp-1', 'cordapp-2', 'cordapp-2v2', 'cordapp-3'].each {
+    project(":$it").projectDir = file("$settingsDir/cordapps/$it")
+}

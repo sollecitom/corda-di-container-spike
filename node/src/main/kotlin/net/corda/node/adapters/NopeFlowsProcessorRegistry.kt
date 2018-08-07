@@ -1,14 +1,12 @@
 package net.corda.node.adapters
 
-import net.corda.commons.di.DefaultBehaviour
 import net.corda.commons.utils.logging.loggerFor
 import net.corda.node.api.flows.processing.FlowProcessor
 import net.corda.node.api.flows.processing.FlowProcessors
 import javax.annotation.PostConstruct
-import javax.inject.Named
+import javax.enterprise.context.ApplicationScoped
 
-@DefaultBehaviour
-@Named
+@ApplicationScoped
 internal class NopeFlowsProcessorRegistry : FlowProcessors.Registry, FlowProcessors.Repository {
 
     private companion object {
