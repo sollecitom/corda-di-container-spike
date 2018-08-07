@@ -6,11 +6,11 @@ import net.corda.node.api.cordapp.Cordapp
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
-internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val rootPackages: Set<String>, private val classLoader: ClassLoader, private val parentApplicationContext: ApplicationContext) : Cordapp {
+internal class ClassLoadingInheritingCordapp(override val name: String, override val version: Int, private val rootPackages: Set<String>, private val classLoader: ClassLoader, private val parentApplicationContext: ApplicationContext) : Cordapp {
 
     private companion object {
 
-        private val logger = loggerFor<RestrictedClassLoadingCordapp>()
+        private val logger = loggerFor<ClassLoadingInheritingCordapp>()
     }
 
     private val initiatedFlows: Set<Flows.Initiated> by lazy {
@@ -49,7 +49,7 @@ internal class RestrictedClassLoadingCordapp(override val name: String, override
             return false
         }
 
-        other as RestrictedClassLoadingCordapp
+        other as ClassLoadingInheritingCordapp
 
         if (name != other.name) {
             return false

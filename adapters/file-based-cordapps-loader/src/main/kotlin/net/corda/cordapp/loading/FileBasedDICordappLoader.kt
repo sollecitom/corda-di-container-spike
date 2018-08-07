@@ -48,7 +48,7 @@ internal class FileBasedDICordappLoader @Inject internal constructor(override va
         this.parentApplicationContext = applicationContext
     }
 
-    private fun toCordapp(jarFile: File): RestrictedClassLoadingCordapp {
+    private fun toCordapp(jarFile: File): ClassLoadingInheritingCordapp {
 
         val cordappClassLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()), this.javaClass.classLoader)
         return JarInputStream(jarFile.inputStream()).use { jar ->
@@ -61,7 +61,7 @@ internal class FileBasedDICordappLoader @Inject internal constructor(override va
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            RestrictedClassLoadingCordapp(cordappName, cordappVersion, rootPackages, cordappClassLoader, parentApplicationContext)
+            ClassLoadingInheritingCordapp(cordappName, cordappVersion, rootPackages, cordappClassLoader, parentApplicationContext)
         }
     }
 
