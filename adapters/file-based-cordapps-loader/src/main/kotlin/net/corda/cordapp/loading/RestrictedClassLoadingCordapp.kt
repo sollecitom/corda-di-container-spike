@@ -3,9 +3,10 @@ package net.corda.cordapp.loading
 import net.corda.commons.utils.logging.loggerFor
 import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
+import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
-internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val rootPackages: Set<String>, private val classLoader: ClassLoader) : Cordapp {
+internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val rootPackages: Set<String>, private val classLoader: ClassLoader, private val parentApplicationContext: ApplicationContext) : Cordapp {
 
     private companion object {
 
@@ -16,6 +17,7 @@ internal class RestrictedClassLoadingCordapp(override val name: String, override
 
         // Here we have a classLoader per Cordapp per version, along with a separate ApplicationContext.
         val context = AnnotationConfigApplicationContext()
+        context.parent = parentApplicationContext
         context.classLoader = classLoader
         context.scan(*rootPackages.toTypedArray())
         context.refresh()
@@ -36,7 +38,7 @@ internal class RestrictedClassLoadingCordapp(override val name: String, override
         logger.info("Cordapp '$name' version '$version' is processing flow '$flowName'.")
     }
 
-    private fun flowsInitiatedBy(initiatingFlowName: String): Set<Flows.Initiated> = initiatedFlows.filter { it.initiatedBy.any { it.qualifiedName == initiatingFlowName } }.toSet()
+    private fun flowsInitiatedBy(initiatingFlowName: String): Set<Flows.Initiated> = initiatedFlows.filter { initiated -> initiated.initiatedBy.any { initiating -> initiating.qualifiedName == initiatingFlowName } }.toSet()
 
     override fun equals(other: Any?): Boolean {
 

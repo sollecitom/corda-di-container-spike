@@ -3,6 +3,8 @@ package net.corda.cordapp.loading
 import net.corda.commons.events.EventSupport
 import net.corda.node.api.cordapp.Cordapp
 import net.corda.node.api.cordapp.CordappsLoader
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import java.io.File
 import java.net.URLClassLoader
 import java.util.jar.Attributes
@@ -13,12 +15,10 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class FileBasedCordappLoader @Inject internal constructor(override val source: FileBasedCordappLoaderEventSupport = FileBasedCordappLoaderEventSupport()) : CordappsLoader {
+internal class FileBasedCordappLoader @Inject internal constructor(override val source: FileBasedCordappLoaderEventSupport = FileBasedCordappLoaderEventSupport()) : CordappsLoader, ApplicationContextAware {
 
     private companion object {
         private const val ROOT_PACKAGE_SEPARATOR = ";"
-
-        private val CORDAPP_AUGMENTING_PACKAGES = arrayOf("net.corda.node.services")
 
         private val cordappsDirectory = File("node/cordapps")
     }
@@ -26,6 +26,8 @@ internal class FileBasedCordappLoader @Inject internal constructor(override val 
     // Spring needs this when the @Inject annotated constructor has only 1 parameter and this parameter has a default value (it conflicts with the default constructor).
     @Suppress("unused")
     private constructor() : this(source = FileBasedCordappLoaderEventSupport())
+
+    private lateinit var parentApplicationContext: ApplicationContext
 
     override val cordapps: Set<Cordapp> by lazy {
 
@@ -41,6 +43,11 @@ internal class FileBasedCordappLoader @Inject internal constructor(override val 
         source.publish(CordappsLoader.Event.CordappsWereLoaded(cordapps))
     }
 
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+
+        this.parentApplicationContext = applicationContext
+    }
+
     private fun toCordapp(jarFile: File): RestrictedClassLoadingCordapp {
 
         val cordappClassLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()), this.javaClass.classLoader)
@@ -54,7 +61,7 @@ internal class FileBasedCordappLoader @Inject internal constructor(override val 
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            RestrictedClassLoadingCordapp(cordappName, cordappVersion, rootPackages + CORDAPP_AUGMENTING_PACKAGES, cordappClassLoader)
+            RestrictedClassLoadingCordapp(cordappName, cordappVersion, rootPackages, cordappClassLoader, parentApplicationContext)
         }
     }
 
