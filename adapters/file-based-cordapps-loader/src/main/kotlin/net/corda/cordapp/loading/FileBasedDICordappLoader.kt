@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Named
-internal class FileBasedCordappLoader @Inject internal constructor(override val source: FileBasedCordappLoaderEventSupport = FileBasedCordappLoaderEventSupport()) : CordappsLoader, ApplicationContextAware {
+internal class FileBasedDICordappLoader @Inject internal constructor(override val source: FileBasedCordappLoaderEventSupport = FileBasedCordappLoaderEventSupport()) : CordappsLoader, ApplicationContextAware {
 
     private companion object {
         private const val ROOT_PACKAGE_SEPARATOR = ";"
