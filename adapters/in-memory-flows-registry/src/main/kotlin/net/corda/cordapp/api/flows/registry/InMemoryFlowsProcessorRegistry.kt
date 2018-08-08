@@ -19,21 +19,17 @@ class InMemoryFlowsProcessorRegistry @Inject constructor(private val logNewBindi
     private val processorsByFlow: ConcurrentMap<String, MutableSet<FlowProcessor>> = ConcurrentHashMap()
 
     private companion object {
-
         private val logger = loggerFor<InMemoryFlowsProcessorRegistry>()
     }
 
     @PostConstruct
     private fun logInitialisation() {
-
         // This still happens, regardless of the priority.
         logger.info("Initializing InMemoryFlowsProcessorRegistry")
     }
 
     override fun register(processor: FlowProcessor) {
-
         processor.supportedFlowNames.forEach { flow ->
-
             val processors = processorsByFlow.computeIfAbsent(flow) { _ -> mutableSetOf() }
             processors += processor
             logNewBinding.apply(flow, processor, processors)
@@ -43,7 +39,6 @@ class InMemoryFlowsProcessorRegistry @Inject constructor(private val logNewBindi
     override fun forFlow(initiatingFlowName: String): Set<FlowProcessor> = processorsByFlow.getOrDefault(initiatingFlowName, emptySet<FlowProcessor>()).toSet()
 
     interface LogNewBinding {
-
         fun apply(initiating: String, processor: FlowProcessor, allInitiatedFlows: Set<FlowProcessor>)
     }
 }
