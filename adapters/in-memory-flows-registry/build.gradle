@@ -1,15 +1,17 @@
+apply plugin: 'java-library'
+
 dependencies {
-    compileOnly project(':node-api')
-    compileOnly project(':commons')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation project(':node-api')
 }
 
 jar {
     manifest {
         attributes(
-                "Specification-Title": "net.corda.node.api.flows.processing.registry.FlowsRegistry",
-                "Specification-Version": project.parent.version,
-                "Implementation-Title": "net.corda.cordapp.api.flows.registry.NoOpFlowsRegistry",
-                "Implementation-Version": project.parent.version
+            "Specification-Title": "net.corda.node.api.flows.processing.registry.FlowsRegistry",
+            "Specification-Version": project.parent.version,
+            "Implementation-Title": "net.corda.cordapp.api.flows.registry.NoOpFlowsRegistry",
+            "Implementation-Version": project.parent.version
         )
     }
     baseName = project.name

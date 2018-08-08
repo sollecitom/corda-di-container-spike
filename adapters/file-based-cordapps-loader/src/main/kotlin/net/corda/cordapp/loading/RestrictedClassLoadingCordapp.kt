@@ -5,18 +5,20 @@ import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
 import org.jboss.weld.environment.se.Weld
 
-internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val rootPackages: Set<String>, private val classLoader: ClassLoader) : Cordapp {
+internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val rootPackages: Set<Package>, private val classLoader: ClassLoader) : Cordapp {
     private companion object {
         private val logger = loggerFor<RestrictedClassLoadingCordapp>()
     }
 
     private val initiatedFlows: Set<Flows.Initiated> by lazy {
-        Weld.newInstance().setClassLoader(classLoader)
-                .initialize().select(Flows.Initiated::class.java).toSet()
+        Weld.newInstance()
+            .setClassLoader(classLoader)
+            .initialize()
+            .select(Flows.Initiated::class.java)
+            .toSet()
     }
 
     override fun isInitiatedBy(initiatingFlowName: String): Boolean {
-
         return flowsInitiatedBy(initiatingFlowName).isNotEmpty()
     }
 
@@ -25,14 +27,12 @@ internal class RestrictedClassLoadingCordapp(override val name: String, override
     }
 
     override fun process(flowName: String, payload: ByteArray) {
-
         logger.info("Cordapp '$name' version '$version' is processing flow '$flowName'.")
     }
 
-    private fun flowsInitiatedBy(initiatingFlowName: String): Set<Flows.Initiated> = initiatedFlows.filter { it.initiatedBy.any { it.qualifiedName == initiatingFlowName } }.toSet()
+    private fun flowsInitiatedBy(initiatingFlowName: String): Set<Flows.Initiated> = initiatedFlows.filter { flow -> flow.initiatedBy.any { it.qualifiedName == initiatingFlowName } }.toSet()
 
     override fun equals(other: Any?): Boolean {
-
         if (this === other) {
             return true
         }
@@ -41,26 +41,16 @@ internal class RestrictedClassLoadingCordapp(override val name: String, override
         }
 
         other as RestrictedClassLoadingCordapp
-
-        if (name != other.name) {
-            return false
-        }
-        if (version != other.version) {
-            return false
-        }
-
-        return true
+        return (name == other.name) && (version == other.version)
     }
 
     override fun hashCode(): Int {
-
         var result = name.hashCode()
         result = 31 * result + version
         return result
     }
 
     override fun toString(): String {
-
         return "{name='$name', version=$version'}"
     }
 }

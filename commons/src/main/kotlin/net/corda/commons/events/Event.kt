@@ -9,7 +9,6 @@ abstract class Event(val id: String = UUID.randomUUID().toString(), val createdA
     // InvocationContext would be here, perhaps as an optional field, to allow correlation.
 
     final override fun equals(other: Any?): Boolean {
-
         if (this === other) {
             return true
         }
@@ -18,16 +17,10 @@ abstract class Event(val id: String = UUID.randomUUID().toString(), val createdA
         }
 
         other as Event
-
-        if (id != other.id) {
-            return false
-        }
-
-        return true
+        return (id == other.id)
     }
 
     final override fun hashCode(): Int {
-
         return id.hashCode()
     }
 }

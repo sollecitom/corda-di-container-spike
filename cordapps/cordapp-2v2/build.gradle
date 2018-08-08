@@ -1,7 +1,7 @@
 dependencies {
-    compile project(":cordapp-1")
-
-    compileOnly project(":cordapp-api")
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compileOnly project(':cordapp-api')
+    implementation project(':cordapp-1')
 }
 
 task fatJar(type: Jar) {
@@ -13,7 +13,7 @@ task fatJar(type: Jar) {
         )
     }
     baseName = project.name + '-all'
-    from { (configurations.compileClasspath - configurations.compileOnly).collect { it.isDirectory() ? it : zipTree(it) } }
+    from { (configurations.compileClasspath - configurations.compileOnly).filter { it.isFile() }.collect { zipTree(it) } }
     with jar
 }
 
@@ -24,4 +24,4 @@ fatJar.doLast {
     }
 }
 
-assemble.dependsOn(fatJar)
+assemble.dependsOn fatJar

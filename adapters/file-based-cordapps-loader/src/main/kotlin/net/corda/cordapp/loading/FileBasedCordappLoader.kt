@@ -17,16 +17,13 @@ import javax.inject.Inject
 internal class FileBasedCordappLoader @Inject internal constructor(override val source: EventSupport<CordappsLoader.Event>) : CordappsLoader {
 
     private companion object {
-        private const val ROOT_PACKAGE_SEPARATOR = ";"
-
-        private val CORDAPP_AUGMENTING_PACKAGES = arrayOf("net.corda.node.services")
+        private val CORDAPP_AUGMENTING_PACKAGES = setOf(Package.getPackage("net.corda.node.services"))
 
         private val cordappsDirectory = File("node/cordapps")
         private val log = loggerFor<FileBasedCordappLoader>()
     }
 
     override val cordapps: Set<Cordapp> by lazy {
-
         val cordapps = cordappsDirectory.walkTopDown().filter(this::isJar).map(this::toCordapp).toList()
         val distinct = cordapps.toSortedSet(Comparator.comparing(Cordapp::name).thenComparing(Cordapp::version))
         require(distinct.size == cordapps.size) { "Cordapps are not distinct. Found $cordapps." }
@@ -35,7 +32,6 @@ internal class FileBasedCordappLoader @Inject internal constructor(override val 
 
     @PostConstruct
     internal fun init() {
-
         source.publish(CordappsLoader.Event.CordappsWereLoaded(cordapps))
     }
 
@@ -48,18 +44,16 @@ internal class FileBasedCordappLoader @Inject internal constructor(override val 
             val manifest = jar.manifest
             val cordappName = manifest["Implementation-Title"]
             val cordappVersion = manifest["Implementation-Version"]?.toInt()
-            val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet()
-                    ?: throw IllegalArgumentException("Cordapps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapp.one;com.apache.commons'!")
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            RestrictedClassLoadingCordapp(cordappName, cordappVersion, rootPackages + CORDAPP_AUGMENTING_PACKAGES, cordappClassLoader)
+            RestrictedClassLoadingCordapp(cordappName, cordappVersion, CORDAPP_AUGMENTING_PACKAGES, cordappClassLoader)
         }
     }
 
     private fun isJar(file: File) = !file.isDirectory && file.extension == "jar"
 
-    private operator fun Manifest.get(key: String): String? = this.mainAttributes[Attributes.Name(key)]?.let { it as String }
+    private operator fun Manifest.get(key: String): String? = mainAttributes[Attributes.Name(key)]?.let { it as String }
 
     @ApplicationScoped
     internal class FileBasedCordappLoaderEventSupport : EventSupport<CordappsLoader.Event>()

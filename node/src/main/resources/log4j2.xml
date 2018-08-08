@@ -9,7 +9,7 @@
         <Root level="info">
             <AppenderRef ref="Console" />
         </Root>
-        <Logger name="org.springframework" level="WARN" additivity="false">
+        <Logger name="org.jboss.weld" level="WARN" additivity="false">
             <Appender-ref ref="Console" level="WARN" />
         </Logger>
     </Loggers>

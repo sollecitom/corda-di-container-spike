@@ -1,16 +1,8 @@
-// This should be a collection of domain modules, but for the sake of the example a common one is fine.
-buildscript {
-    ext {
-        konfig_version = '1.6.10.0'
-        slf4j_version = '1.7.25'
-        reactor_version = '3.1.8.RELEASE'
-    }
-}
+apply plugin: 'java-library'
 
 dependencies {
-    compile "org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec:1.0.0.Final"
-    compile "com.natpryce:konfig:$konfig_version"
-    compile "org.slf4j:slf4j-api:$slf4j_version"
-
-    compile "io.projectreactor:reactor-core:$reactor_version"
+    api "com.natpryce:konfig:$konfig_version"
+    api "org.slf4j:slf4j-api:$slf4j_version"
+    api "io.projectreactor:reactor-core:$reactor_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }

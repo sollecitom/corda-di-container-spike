@@ -8,11 +8,15 @@ buildscript {
         junit_version = '5.2.0'
         junit_gradle_plugin_version = '1.2.0'
 
-        javax_cdi_version = '1.2'
+        javax_cdi_version = '2.0'
         javax_annotation_api_version = '1.3.2'
+
+        konfig_version = '1.6.10.0'
+        reactor_version = '3.1.8.RELEASE'
 
         weld_version = '3.0.5.Final'
         jandex_version = '2.0.5.Final'
+        slf4j_version = '1.7.25'
         log4j_version = '2.11.1'
     }
 
@@ -38,7 +42,6 @@ subprojects {
 
     apply plugin: 'kotlin'
     apply plugin: 'kotlin-allopen'
-    apply plugin: 'idea'
 
     allOpen {
         annotations(
@@ -49,14 +52,11 @@ subprojects {
     sourceCompatibility = java_version
 
     dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-
         compileOnly "javax.enterprise:cdi-api:$javax_cdi_version"
 
-        testCompile("org.junit.jupiter:junit-jupiter-api:$junit_version")
-        testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit_version")
-        testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+        testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -74,7 +74,7 @@ subprojects {
         from 'src/main/weld'
         into compileKotlin.destinationDir
     }
-    processResources.dependsOn copyWeld
+    compileKotlin.finalizedBy copyWeld
 
     tasks.withType(AbstractArchiveTask).all {
         reproducibleFileOrder = true
