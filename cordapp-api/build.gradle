@@ -2,6 +2,5 @@ apply plugin: 'java-library'
 
 dependencies {
     api project(':commons')
-    api "org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec:1.0.0.Final"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
