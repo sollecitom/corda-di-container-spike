@@ -86,12 +86,13 @@ ext {
     nodePluginsDirectory = file("$rootDir/node/plugins")
 }
 
-clean.doFirst {
-    nodePluginsDirectory.deleteDir()
-    nodeCordappsDirectory.deleteDir()
-}
-
-clean.doLast {
-    nodePluginsDirectory.mkdirs()
-    nodeCordappsDirectory.mkdirs()
+clean {
+    doFirst {
+        nodePluginsDirectory.deleteDir()
+        nodeCordappsDirectory.deleteDir()
+    }
+    doLast {
+        nodePluginsDirectory.mkdirs()
+        nodeCordappsDirectory.mkdirs()
+    }
 }
