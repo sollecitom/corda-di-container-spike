@@ -4,5 +4,5 @@ dependencies {
     api "com.natpryce:konfig:$konfig_version"
     api "org.slf4j:slf4j-api:$slf4j_version"
     api "io.projectreactor:reactor-core:$reactor_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
