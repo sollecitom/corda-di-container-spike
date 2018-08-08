@@ -5,7 +5,7 @@ import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
 import org.jboss.weld.environment.se.Weld
 
-internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val rootPackages: Set<Package>, private val classLoader: ClassLoader) : Cordapp {
+internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val classLoader: ClassLoader) : Cordapp {
     private companion object {
         private val logger = loggerFor<RestrictedClassLoadingCordapp>()
     }

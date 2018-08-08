@@ -17,8 +17,6 @@ import javax.inject.Inject
 internal class FileBasedCordappLoader @Inject internal constructor(override val source: EventSupport<CordappsLoader.Event>) : CordappsLoader {
 
     private companion object {
-        private val CORDAPP_AUGMENTING_PACKAGES = setOf(Package.getPackage("net.corda.node.services"))
-
         private val cordappsDirectory = File("node/cordapps")
         private val log = loggerFor<FileBasedCordappLoader>()
     }
@@ -47,7 +45,7 @@ internal class FileBasedCordappLoader @Inject internal constructor(override val 
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            RestrictedClassLoadingCordapp(cordappName, cordappVersion, CORDAPP_AUGMENTING_PACKAGES, cordappClassLoader)
+            RestrictedClassLoadingCordapp(cordappName, cordappVersion, cordappClassLoader)
         }
     }
 

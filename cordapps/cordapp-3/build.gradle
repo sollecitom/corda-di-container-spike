@@ -8,8 +8,7 @@ task fatJar(type: Jar) {
     manifest {
         attributes(
             "Implementation-Title": "net.corda.spikes.di-container-spike.cordapp3",
-            "Implementation-Version": "1",
-            "Root-Packages": "examples.cordapps.three"
+            "Implementation-Version": "1"
         )
     }
     baseName = project.name + '-all'
