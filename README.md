@@ -1,6 +1,6 @@
 # Dependency Injection Container Spike
 
-This project is a showcase of how Corda could benefit from a Dependency Injection container.
+This project is a showcase of how Corda could benefit from a Dependency Injection container and an events framework.
 
 ## What's shown
 
