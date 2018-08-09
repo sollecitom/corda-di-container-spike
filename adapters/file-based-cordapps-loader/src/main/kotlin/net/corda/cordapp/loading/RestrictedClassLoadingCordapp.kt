@@ -4,18 +4,17 @@ import net.corda.commons.utils.logging.loggerFor
 import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
 import org.jboss.weld.environment.se.Weld
+import java.net.URLClassLoader
+import javax.enterprise.inject.se.SeContainer
 
-internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val classLoader: ClassLoader) : Cordapp {
+internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val classLoader: URLClassLoader) : Cordapp {
     private companion object {
         private val logger = loggerFor<RestrictedClassLoadingCordapp>()
     }
 
+    private val container: SeContainer = Weld.newInstance().setClassLoader(classLoader).initialize()
     private val initiatedFlows: Set<Flows.Initiated> by lazy {
-        Weld.newInstance()
-            .setClassLoader(classLoader)
-            .initialize()
-            .select(Flows.Initiated::class.java)
-            .toSet()
+        container.select(Flows.Initiated::class.java).toSet()
     }
 
     override fun isInitiatedBy(initiatingFlowName: String): Boolean {
@@ -52,5 +51,12 @@ internal class RestrictedClassLoadingCordapp(override val name: String, override
 
     override fun toString(): String {
         return "{name='$name', version=$version'}"
+    }
+
+    override fun close() {
+        logger.info("Unloading $this")
+        classLoader.use {
+            container.close()
+        }
     }
 }

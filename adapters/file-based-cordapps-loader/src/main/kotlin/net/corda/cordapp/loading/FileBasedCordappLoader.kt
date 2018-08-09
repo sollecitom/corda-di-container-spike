@@ -10,6 +10,7 @@ import java.util.jar.Attributes
 import java.util.jar.JarInputStream
 import java.util.jar.Manifest
 import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -31,6 +32,12 @@ internal class FileBasedCordappLoader @Inject internal constructor(override val 
     @PostConstruct
     internal fun init() {
         source.publish(CordappsLoader.Event.CordappsWereLoaded(cordapps))
+    }
+
+    @PreDestroy
+    internal fun done() {
+        log.info("Unloading CorDapps")
+        cordapps.forEach(Cordapp::close)
     }
 
     private fun toCordapp(jarFile: File): RestrictedClassLoadingCordapp {
