@@ -26,6 +26,7 @@ libs/quasar.jar
 *.iml
 
 ## Directory-based project format:
+.idea/**/*.xml
 .idea/*.xml
 .idea/.name
 .idea/copyright

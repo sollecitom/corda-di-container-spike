@@ -15,8 +15,6 @@ abstract class EventSupport<EVENT : Event> : EventSource<EVENT>, EventSink<EVENT
 
     // This is to ensure a subscriber receives events that were published up to 5 seconds before. It helps during initialisation.
     override val events: Flux<EVENT> = processor.cache(EVENTS_LOG_TTL)
-    // This could force subscribers to run on a separate thread, to avoid deadlocks.
-//    override val events: Flux<EVENT> = processor.publishOn(Schedulers.parallel())
 
     override fun publish(event: EVENT) = processor.onNext(event)
 

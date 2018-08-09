@@ -19,13 +19,13 @@ internal class FileBasedDICordappLoader @Inject internal constructor(override va
 
     private companion object {
         private const val ROOT_PACKAGE_SEPARATOR = ";"
+        private const val NODE_CORDAPP_SERVICES = "net.corda.node.cordapp.services"
 
         private val cordappsDirectory = File("node/cordapps")
     }
 
     // Spring needs this when the @Inject annotated constructor has only 1 parameter and this parameter has a default value (it conflicts with the default constructor).
-    @Suppress("unused")
-    private constructor() : this(source = FileBasedCordappLoaderEventSupport())
+    @Suppress("unused") private constructor() : this(source = FileBasedCordappLoaderEventSupport())
 
     private lateinit var parentApplicationContext: ApplicationContext
 
@@ -51,17 +51,17 @@ internal class FileBasedDICordappLoader @Inject internal constructor(override va
     private fun toCordapp(jarFile: File): ClassLoadingInheritingCordapp {
 
         val cordappClassLoader = URLClassLoader(arrayOf(jarFile.toURI().toURL()), this.javaClass.classLoader)
+
         return JarInputStream(jarFile.inputStream()).use { jar ->
 
             val manifest = jar.manifest
             val cordappName = manifest["Implementation-Title"]
             val cordappVersion = manifest["Implementation-Version"]?.toInt()
-            val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet()
-                    ?: throw IllegalArgumentException("Cordapps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapp.one;com.apache.commons'!")
+            val rootPackages = manifest["Root-Packages"]?.split(ROOT_PACKAGE_SEPARATOR)?.toSet() ?: throw IllegalArgumentException("Cordapps should declare 1 or more root packages inside JAR manifest e.g., 'Root-Packages:examples.cordapp.one;com.apache.commons'!")
             if (cordappName == null || cordappVersion == null) {
                 throw Exception("Invalid Cordapp specification.")
             }
-            ClassLoadingInheritingCordapp(cordappName, cordappVersion, rootPackages, cordappClassLoader, parentApplicationContext)
+            ClassLoadingInheritingCordapp(cordappName, cordappVersion, rootPackages + NODE_CORDAPP_SERVICES, cordappClassLoader, parentApplicationContext)
         }
     }
 

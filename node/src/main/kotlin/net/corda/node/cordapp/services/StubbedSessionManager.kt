@@ -1,4 +1,4 @@
-package net.corda.node.services
+package net.corda.node.cordapp.services
 
 import net.corda.commons.domain.network.Party
 import net.corda.commons.utils.logging.loggerFor
