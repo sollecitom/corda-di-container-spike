@@ -7,7 +7,6 @@ import net.corda.node.api.events.EventBus
 import reactor.core.publisher.EmitterProcessor
 import reactor.core.publisher.Flux
 import reactor.core.scheduler.Schedulers
-import java.io.Closeable
 import java.time.Duration
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
@@ -18,7 +17,7 @@ import javax.inject.Inject
 // This would normally be in a separate module depending on commons and available to adapters as well, not in node-api. The package "impl" should not exist as well.
 // It is not in module "node" to stay available for adapters modules.
 @ApplicationScoped
-class MultiplexingEventBus @Inject constructor(private val sources: Instance<EventSource<*>>) : EventBus, Closeable {
+class MultiplexingEventBus @Inject constructor(private val sources: Instance<EventSource<*>>) : EventBus, AutoCloseable {
 
     private companion object {
         private val EVENTS_LOG_TTL = Duration.ofSeconds(5)

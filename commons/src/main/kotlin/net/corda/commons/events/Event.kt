@@ -12,11 +12,7 @@ abstract class Event(val id: String = UUID.randomUUID().toString(), val createdA
         if (this === other) {
             return true
         }
-        if (javaClass != other?.javaClass) {
-            return false
-        }
-
-        other as Event
+        other as? Event ?: return false
         return (id == other.id)
     }
 

@@ -5,6 +5,7 @@ import net.corda.cordapp.api.flows.Flows
 import net.corda.node.api.cordapp.Cordapp
 import org.jboss.weld.environment.se.Weld
 import java.net.URLClassLoader
+import java.util.*
 import javax.enterprise.inject.se.SeContainer
 
 internal class RestrictedClassLoadingCordapp(override val name: String, override val version: Int, private val classLoader: URLClassLoader) : Cordapp {
@@ -35,19 +36,12 @@ internal class RestrictedClassLoadingCordapp(override val name: String, override
         if (this === other) {
             return true
         }
-        if (javaClass != other?.javaClass) {
-            return false
-        }
 
-        other as RestrictedClassLoadingCordapp
+        other as? RestrictedClassLoadingCordapp ?: return false
         return (name == other.name) && (version == other.version)
     }
 
-    override fun hashCode(): Int {
-        var result = name.hashCode()
-        result = 31 * result + version
-        return result
-    }
+    override fun hashCode(): Int = Objects.hash(name, version)
 
     override fun toString(): String {
         return "{name='$name', version=$version'}"
