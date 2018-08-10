@@ -1,7 +1,7 @@
 package net.corda.node
 
 import net.corda.commons.events.EventPublisher
-import net.corda.commons.events.EventSupport
+import net.corda.commons.events.PublishingEventSource
 import net.corda.commons.utils.logging.loggerFor
 import net.corda.commons.utils.reactive.only
 import net.corda.node.api.Node
@@ -12,8 +12,10 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val eventSourceQualifier = "RpcServerStubPublishingEventSource"
+
 @Named
-internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, private val configuration: RpcServerStub.Configuration, bus: EventBus, override val source: RpcServerStubEventSupport = RpcServerStubEventSupport()) : EventPublisher<RpcServerStub.Event> {
+internal class RpcServerStub @Inject internal constructor(private val processors: FlowProcessors.Repository, private val configuration: RpcServerStub.Configuration, bus: EventBus, @Named(eventSourceQualifier) override val source: PublishingEventSource<RpcServerStub.Event> = RpcServerStubPublishingEventSource()) : EventPublisher<RpcServerStub.Event> {
 
     private companion object {
 
@@ -36,9 +38,6 @@ internal class RpcServerStub @Inject internal constructor(private val processors
         source.publish(Event.Invocation("examples.cordapps.one.flows.QueryClusterAverageTemperature", "Bruce Wayne"))
     }
 
-    @Named
-    internal class RpcServerStubEventSupport : EventSupport<RpcServerStub.Event>()
-
     sealed class Event(id: String = UUID.randomUUID().toString(), createdAt: Instant = Instant.now()) : net.corda.commons.events.Event(id, createdAt) {
 
         // User as a String here is grossly simplified, but just to show the idea. Normally, InvocationContext would be part of this.
@@ -50,4 +49,7 @@ internal class RpcServerStub @Inject internal constructor(private val processors
         val networkHost: String
         val networkPort: Int
     }
+
+    @Named
+    private class RpcServerStubPublishingEventSource : PublishingEventSource<RpcServerStub.Event>()
 }

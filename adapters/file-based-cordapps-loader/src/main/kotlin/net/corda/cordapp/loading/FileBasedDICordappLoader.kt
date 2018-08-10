@@ -1,6 +1,6 @@
 package net.corda.cordapp.loading
 
-import net.corda.commons.events.EventSupport
+import net.corda.commons.events.PublishingEventSource
 import net.corda.node.api.cordapp.Cordapp
 import net.corda.node.api.cordapp.CordappsLoader
 import org.springframework.context.ApplicationContext
@@ -14,8 +14,10 @@ import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val eventSourceQualifier = "FileBasedDICordappLoaderPublishingEventSource"
+
 @Named
-internal class FileBasedDICordappLoader @Inject internal constructor(override val source: FileBasedCordappLoaderEventSupport = FileBasedCordappLoaderEventSupport()) : CordappsLoader, ApplicationContextAware {
+internal class FileBasedDICordappLoader @Inject internal constructor(@Named(eventSourceQualifier) override val source: PublishingEventSource<CordappsLoader.Event> = FileBasedCordappLoaderPublishingEventSource()) : CordappsLoader, ApplicationContextAware {
 
     private companion object {
         private const val ROOT_PACKAGE_SEPARATOR = ";"
@@ -25,7 +27,7 @@ internal class FileBasedDICordappLoader @Inject internal constructor(override va
     }
 
     // Spring needs this when the @Inject annotated constructor has only 1 parameter and this parameter has a default value (it conflicts with the default constructor).
-    @Suppress("unused") private constructor() : this(source = FileBasedCordappLoaderEventSupport())
+    @Suppress("unused") private constructor() : this(source = FileBasedCordappLoaderPublishingEventSource())
 
     private lateinit var parentApplicationContext: ApplicationContext
 
@@ -69,6 +71,6 @@ internal class FileBasedDICordappLoader @Inject internal constructor(override va
 
     private operator fun Manifest.get(key: String): String? = this.mainAttributes[Attributes.Name(key)]?.let { it as String }
 
-    @Named
-    internal class FileBasedCordappLoaderEventSupport : EventSupport<CordappsLoader.Event>()
+    @Named(eventSourceQualifier)
+    private class FileBasedCordappLoaderPublishingEventSource : PublishingEventSource<CordappsLoader.Event>()
 }

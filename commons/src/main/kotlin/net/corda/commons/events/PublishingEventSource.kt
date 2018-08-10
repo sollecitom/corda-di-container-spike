@@ -5,7 +5,7 @@ import reactor.core.publisher.Flux
 import java.io.Closeable
 import java.time.Duration
 
-abstract class EventSupport<EVENT : Event> : EventSource<EVENT>, EventSink<EVENT>, Closeable {
+abstract class PublishingEventSource<EVENT : Event> : EventSource<EVENT>, EventSink<EVENT>, Closeable {
 
     private companion object {
         private val EVENTS_LOG_TTL = Duration.ofSeconds(5)
